@@ -1,0 +1,4742 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>VIM | Case Management</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="fovrit.ico">
+  <link rel="shortcut icon" href="fovrit.ico">
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <style>
+    /* =========================================================
+       VIM FRONTEND
+       No backend changes
+       ========================================================= */
+
+    :root {
+      --primary: #173f67;
+      --primary-dark: #0e2c49;
+      --primary-light: #285d8f;
+
+      --gold: #c9a227;
+      --gold-light: #e1c45b;
+
+      --bg: #f4f7fb;
+      --card: #ffffff;
+
+      --text: #1b2633;
+      --muted: #718096;
+      --border: #e4eaf1;
+
+      --success: #16835b;
+      --danger: #c0392b;
+      --warning: #c78312;
+
+      --shadow:
+        0 8px 24px rgba(15, 42, 68, 0.08);
+
+      --shadow-hover:
+        0 15px 35px rgba(15, 42, 68, 0.14);
+
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+
+      /*
+        English font stack.
+        No Persian font is loaded or requested.
+      */
+      font-family:
+        Arial,
+        Helvetica,
+        "Segoe UI",
+        sans-serif;
+
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font-family:
+        Arial,
+        Helvetica,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* =========================================================
+       LOADING SCREEN
+       ========================================================= */
+
+    #loadingScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background:
+        radial-gradient(
+          circle at center,
+          #214f7a 0%,
+          #102e4c 42%,
+          #081d31 100%
+        );
+
+      transition:
+        opacity .45s ease,
+        visibility .45s ease;
+    }
+
+    #loadingScreen.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loading-box {
+      width: min(360px, 90vw);
+      text-align: center;
+      color: white;
+    }
+
+    .loading-logo-wrap {
+      width: 130px;
+      height: 130px;
+
+      margin: 0 auto 25px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+
+      background: rgba(255,255,255,.08);
+
+      border: 1px solid rgba(255,255,255,.18);
+
+      box-shadow:
+        0 0 0 0 rgba(201,162,39,.45),
+        0 0 40px rgba(201,162,39,.20);
+
+      animation:
+        logoPulse 2s ease-in-out infinite;
+    }
+
+    .loading-logo {
+      width: 94px;
+      height: 94px;
+
+      object-fit: contain;
+
+      animation:
+        logoFloat 2.5s ease-in-out infinite;
+    }
+
+    .loading-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 1px;
+
+      margin-bottom: 5px;
+    }
+
+    .loading-subtitle {
+      font-size: 12px;
+      opacity: .72;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .loading-line {
+      width: 180px;
+      height: 3px;
+
+      margin: 22px auto 0;
+
+      overflow: hidden;
+
+      border-radius: 20px;
+      background: rgba(255,255,255,.12);
+    }
+
+    .loading-line::after {
+      content: "";
+
+      display: block;
+
+      width: 60%;
+      height: 100%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--gold),
+          white,
+          var(--gold),
+          transparent
+        );
+
+      animation:
+        loadingMove 1.5s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow:
+          0 0 0 0 rgba(201,162,39,.35),
+          0 0 35px rgba(201,162,39,.18);
+      }
+
+      50% {
+        transform: scale(1.04);
+        box-shadow:
+          0 0 0 18px rgba(201,162,39,0),
+          0 0 55px rgba(201,162,39,.30);
+      }
+    }
+
+    @keyframes logoFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    @keyframes loadingMove {
+      0% {
+        transform: translateX(-150%);
+      }
+
+      100% {
+        transform: translateX(260%);
+      }
+    }
+
+    /* =========================================================
+       LOGIN
+       ========================================================= */
+
+    #loginPage {
+      min-height: 100vh;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 25px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #0a233b 0%,
+          #123e64 50%,
+          #0b2945 100%
+        );
+
+      position: relative;
+      overflow: hidden;
+    }
+
+    #loginPage::before {
+      content: "";
+
+      position: absolute;
+
+      width: 500px;
+      height: 500px;
+
+      border-radius: 50%;
+
+      top: -220px;
+      left: -180px;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(201,162,39,.18),
+          transparent 70%
+        );
+    }
+
+    #loginPage::after {
+      content: "";
+
+      position: absolute;
+
+      width: 450px;
+      height: 450px;
+
+      border-radius: 50%;
+
+      right: -200px;
+      bottom: -200px;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(55,145,220,.13),
+          transparent 70%
+        );
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+
+      position: relative;
+      z-index: 2;
+
+      background: rgba(255,255,255,.98);
+
+      border-radius: 22px;
+
+      padding: 34px 30px 28px;
+
+      box-shadow:
+        0 25px 70px rgba(0,0,0,.28);
+
+      border: 1px solid rgba(255,255,255,.45);
+
+      animation:
+        loginAppear .65s ease;
+    }
+
+    @keyframes loginAppear {
+      from {
+        opacity: 0;
+        transform: translateY(25px) scale(.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .login-logo {
+      width: 105px;
+      height: 105px;
+
+      display: block;
+
+      object-fit: contain;
+
+      margin: 0 auto 14px;
+    }
+
+    .login-title {
+      text-align: center;
+
+      color: var(--primary);
+
+      font-size: 25px;
+      font-weight: 800;
+
+      margin: 0;
+    }
+
+    .login-subtitle {
+      text-align: center;
+
+      color: var(--muted);
+
+      font-size: 12px;
+
+      margin:
+        5px 0 27px;
+
+      letter-spacing: .4px;
+    }
+
+    .form-group {
+      margin-bottom: 17px;
+    }
+
+    .form-label {
+      display: block;
+
+      color: #334155;
+
+      font-size: 12px;
+      font-weight: 700;
+
+      margin-bottom: 7px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+
+      right: 14px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      color: #8190a2;
+
+      pointer-events: none;
+    }
+
+    .form-input {
+      width: 100%;
+
+      height: 48px;
+
+      padding:
+        0 43px 0 14px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 11px;
+
+      background: #f9fbfd;
+
+      color: var(--text);
+
+      outline: none;
+
+      transition:
+        border-color .2s,
+        box-shadow .2s,
+        background .2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary-light);
+
+      background: #fff;
+
+      box-shadow:
+        0 0 0 3px rgba(40,93,143,.10);
+    }
+
+    .login-button {
+      width: 100%;
+
+      height: 50px;
+
+      margin-top: 5px;
+
+      border: 0;
+      border-radius: 11px;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-light)
+        );
+
+      font-size: 14px;
+      font-weight: 800;
+
+      box-shadow:
+        0 8px 20px rgba(23,63,103,.20);
+
+      transition:
+        transform .2s,
+        box-shadow .2s;
+    }
+
+    .login-button:hover {
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 12px 25px rgba(23,63,103,.27);
+    }
+
+    .login-button:active {
+      transform: translateY(0);
+    }
+
+    .login-button.loading {
+      pointer-events: none;
+      opacity: .78;
+    }
+
+    .login-error {
+      display: none;
+
+      padding: 10px 12px;
+
+      margin-bottom: 15px;
+
+      border-radius: 9px;
+
+      background: #fff1f0;
+      border: 1px solid #ffd2ce;
+
+      color: #b42318;
+
+      font-size: 12px;
+
+      text-align: center;
+    }
+
+    .login-error.show {
+      display: block;
+    }
+
+    .login-footer {
+      text-align: center;
+
+      color: #9aa5b1;
+
+      font-size: 10px;
+
+      margin-top: 22px;
+    }
+
+    /* =========================================================
+       DASHBOARD
+       ========================================================= */
+
+    #dashboardPage {
+      display: none;
+
+      min-height: 100vh;
+    }
+
+    .top-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      height: 72px;
+
+      background:
+        rgba(255,255,255,.94);
+
+      backdrop-filter:
+        blur(14px);
+
+      border-bottom:
+        1px solid var(--border);
+
+      box-shadow:
+        0 4px 15px rgba(20,40,60,.04);
+    }
+
+    .header-inner {
+      max-width: 1380px;
+
+      height: 100%;
+
+      margin: auto;
+
+      padding:
+        0 24px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
+
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 45px;
+      height: 45px;
+
+      object-fit: contain;
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 900;
+
+      color: var(--primary);
+
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      color: #8a97a6;
+
+      font-size: 9px;
+
+      letter-spacing: 1px;
+
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+
+      gap: 8px;
+    }
+
+    .header-button {
+      height: 38px;
+
+      border: 1px solid var(--border);
+
+      border-radius: 9px;
+
+      background: white;
+
+      padding:
+        0 13px;
+
+      color: #475569;
+
+      font-size: 11px;
+      font-weight: 700;
+
+      transition:
+        background .2s,
+        color .2s,
+        border-color .2s;
+    }
+
+    .header-button:hover {
+      background: #f5f8fb;
+
+      color: var(--primary);
+
+      border-color: #cdd8e4;
+    }
+
+    .header-button.logout {
+      color: var(--danger);
+    }
+
+    .header-button.logout:hover {
+      background: #fff5f4;
+      border-color: #ffd8d3;
+    }
+
+    .dashboard-container {
+      max-width: 1380px;
+
+      margin: auto;
+
+      padding:
+        22px 24px 35px;
+    }
+
+    /* =========================================================
+       WELCOME
+       ========================================================= */
+
+    .welcome-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 20px;
+
+      padding:
+        18px 20px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #143b60,
+          #245b88
+        );
+
+      border-radius: 15px;
+
+      color: white;
+
+      box-shadow:
+        var(--shadow);
+
+      margin-bottom: 17px;
+    }
+
+    .welcome-info h1 {
+      margin: 0 0 3px;
+
+      font-size: 19px;
+      font-weight: 850;
+    }
+
+    .welcome-info p {
+      margin: 0;
+
+      font-size: 11px;
+
+      opacity: .76;
+    }
+
+    .passport-badge {
+      display: inline-flex;
+
+      align-items: center;
+      gap: 7px;
+
+      background: rgba(255,255,255,.11);
+
+      border:
+        1px solid rgba(255,255,255,.16);
+
+      border-radius: 9px;
+
+      padding:
+        8px 11px;
+
+      font-size: 10px;
+    }
+
+    /* =========================================================
+       STATS
+       ========================================================= */
+
+    .stats-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+      gap: 12px;
+
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--card);
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 13px;
+
+      padding:
+        14px 15px;
+
+      display: flex;
+      align-items: center;
+
+      gap: 12px;
+
+      box-shadow:
+        var(--shadow);
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+
+      flex: 0 0 38px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 10px;
+
+      background: #eef4f9;
+
+      color: var(--primary);
+
+      font-size: 15px;
+    }
+
+    .stat-content {
+      min-width: 0;
+    }
+
+    .stat-value {
+      font-size: 20px;
+
+      font-weight: 900;
+
+      color: var(--primary);
+
+      line-height: 1;
+    }
+
+    .stat-label {
+      color: var(--muted);
+
+      font-size: 10px;
+
+      margin-top: 4px;
+    }
+
+    /* =========================================================
+       CASES HEADER
+       ========================================================= */
+
+    .section-header {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      margin:
+        3px 0 12px;
+
+      gap: 10px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+
+      gap: 8px;
+
+      margin: 0;
+
+      color: var(--primary);
+
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .section-title i {
+      color: var(--gold);
+    }
+
+    .case-count {
+      color: var(--muted);
+
+      font-size: 10px;
+    }
+
+    /* =========================================================
+       CASE GRID
+       ========================================================= */
+
+    .cases-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 13px;
+
+      align-items: start;
+    }
+
+    /* =========================================================
+       CASE CARD
+       ========================================================= */
+
+    .case-card {
+      position: relative;
+
+      background: var(--card);
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 13px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 5px 18px rgba(20,40,60,.055);
+
+      transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+
+      animation:
+        cardAppear .45s ease both;
+    }
+
+    .case-card:hover {
+      transform: translateY(-3px);
+
+      box-shadow:
+        var(--shadow-hover);
+
+      border-color:
+        #d2dce7;
+    }
+
+    @keyframes cardAppear {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .case-header {
+      min-height: 70px;
+
+      padding:
+        13px 14px 11px;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          #123958,
+          #245b88
+        );
+
+      position: relative;
+    }
+
+    .case-header::after {
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      pointer-events: none;
+
+      background:
+        linear-gradient(
+          110deg,
+          rgba(255,255,255,.05),
+          transparent 35%,
+          rgba(255,255,255,.04)
+        );
+    }
+
+    .case-header-top {
+      position: relative;
+      z-index: 2;
+
+      display: flex;
+      align-items: flex-start;
+
+      gap: 10px;
+    }
+
+    .country-flag {
+      width: 38px;
+      height: 30px;
+
+      flex: 0 0 38px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(255,255,255,.11);
+
+      border:
+        1px solid rgba(255,255,255,.20);
+
+      border-radius: 7px;
+
+      overflow: hidden;
+
+      font-size: 23px;
+
+      box-shadow:
+        0 3px 9px rgba(0,0,0,.10);
+    }
+
+    .country-flag img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      display: block;
+    }
+
+    .case-title-box {
+      min-width: 0;
+
+      flex: 1;
+    }
+
+    .case-number {
+      font-size: 9px;
+
+      opacity: .68;
+
+      letter-spacing: .6px;
+
+      margin-bottom: 2px;
+    }
+
+    .case-title {
+      margin: 0;
+
+      font-size: 13px;
+
+      line-height: 1.35;
+
+      font-weight: 850;
+
+      word-break: break-word;
+    }
+
+    .case-country {
+      margin-top: 4px;
+
+      font-size: 9px;
+
+      opacity: .76;
+    }
+
+    /* =========================================================
+       PROGRESS
+       ========================================================= */
+
+    .progress-area {
+      padding:
+        10px 13px 8px;
+
+      border-bottom:
+        1px solid #edf1f5;
+    }
+
+    .progress-top {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 5px;
+    }
+
+    .progress-label {
+      color: #7a8796;
+
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .progress-value {
+      font-size: 10px;
+      font-weight: 900;
+
+      color: var(--primary);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+
+      border-radius: 20px;
+
+      background: #edf1f5;
+
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          #2b699a,
+          #4d94c5
+        );
+
+      transition:
+        width .8s ease;
+    }
+
+    .progress-completed .progress-bar {
+      background:
+        linear-gradient(
+          90deg,
+          #148458,
+          #2bb673
+        );
+    }
+
+    .progress-completed .progress-value {
+      color: var(--success);
+    }
+
+    /* =========================================================
+       CASE BODY
+       ========================================================= */
+
+    .case-body {
+      padding:
+        10px 13px 12px;
+    }
+
+    .fields-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 7px;
+
+      margin-bottom: 9px;
+    }
+
+    .field-item {
+      min-width: 0;
+
+      padding:
+        7px 8px;
+
+      border:
+        1px solid #edf1f5;
+
+      background:
+        #fafcfe;
+
+      border-radius: 8px;
+    }
+
+    .field-label {
+      color: #8793a1;
+
+      font-size: 8px;
+
+      margin-bottom: 2px;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+    }
+
+    .field-value {
+      color: #344154;
+
+      font-size: 9px;
+      font-weight: 700;
+
+      line-height: 1.45;
+
+      word-break: break-word;
+    }
+
+    /* =========================================================
+       BUTTONS
+       ========================================================= */
+
+    .case-actions {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 6px;
+
+      margin-top: 8px;
+    }
+
+    .case-button {
+      min-height: 31px;
+
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      gap: 5px;
+
+      padding:
+        0 10px;
+
+      border-radius: 8px;
+
+      font-size: 9px;
+      font-weight: 800;
+
+      transition:
+        transform .15s,
+        box-shadow .15s,
+        background .15s;
+    }
+
+    .case-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .case-button.primary {
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-light)
+        );
+
+      box-shadow:
+        0 4px 10px rgba(23,63,103,.16);
+    }
+
+    .case-button.document {
+      color: #37506b;
+
+      background: #edf4f9;
+
+      border:
+        1px solid #d9e5ee;
+    }
+
+    .case-button.external {
+      color: #22654f;
+
+      background: #edf8f3;
+
+      border:
+        1px solid #d3ece2;
+    }
+
+    .case-button i {
+      font-size: 9px;
+    }
+
+    /* =========================================================
+       EMPTY
+       ========================================================= */
+
+    .empty-state {
+      padding:
+        50px 20px;
+
+      text-align: center;
+
+      background: white;
+
+      border:
+        1px dashed #ccd6e0;
+
+      border-radius: 14px;
+
+      color: var(--muted);
+    }
+
+    .empty-state i {
+      font-size: 30px;
+
+      color: #b8c5d2;
+
+      margin-bottom: 10px;
+    }
+
+    .empty-state h3 {
+      margin:
+        0 0 3px;
+
+      color: #4a5868;
+
+      font-size: 14px;
+    }
+
+    .empty-state p {
+      margin: 0;
+
+      font-size: 10px;
+    }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+
+    .dashboard-footer {
+      max-width: 1380px;
+
+      margin:
+        0 auto;
+
+      padding:
+        0 24px 25px;
+    }
+
+    .footer-inner {
+      border-top:
+        1px solid var(--border);
+
+      padding-top: 15px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 12px;
+
+      color: #8793a1;
+
+      font-size: 9px;
+    }
+
+    .whatsapp-link {
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 6px;
+
+      color: #1c8b5a;
+
+      font-weight: 800;
+
+      direction: ltr;
+    }
+
+    .whatsapp-link i {
+      font-size: 18px;
+    }
+
+    /* =========================================================
+       MODAL
+       ========================================================= */
+
+    .modal {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 5000;
+
+      display: none;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 18px;
+
+      background:
+        rgba(8,26,42,.58);
+
+      backdrop-filter:
+        blur(5px);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: min(850px, 100%);
+
+      max-height: 88vh;
+
+      overflow: auto;
+
+      background: white;
+
+      border-radius: 17px;
+
+      box-shadow:
+        0 25px 70px rgba(0,0,0,.25);
+
+      animation:
+        modalIn .25s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px) scale(.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-header {
+      position: sticky;
+
+      top: 0;
+
+      z-index: 2;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 12px;
+
+      padding:
+        14px 17px;
+
+      background:
+        rgba(255,255,255,.97);
+
+      backdrop-filter:
+        blur(10px);
+
+      border-bottom:
+        1px solid var(--border);
+    }
+
+    .modal-title {
+      margin: 0;
+
+      color: var(--primary);
+
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      border: 0;
+
+      border-radius: 8px;
+
+      background: #f2f5f8;
+
+      color: #607080;
+    }
+
+    .modal-content {
+      padding: 17px;
+    }
+
+    .modal-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 8px;
+    }
+
+    .modal-field {
+      border:
+        1px solid var(--border);
+
+      border-radius: 9px;
+
+      padding: 9px 10px;
+
+      background: #fafcfe;
+    }
+
+    .modal-field-label {
+      color: #8793a1;
+
+      font-size: 9px;
+
+      margin-bottom: 3px;
+    }
+
+    .modal-field-value {
+      color: #273548;
+
+      font-size: 10px;
+
+      line-height: 1.6;
+
+      word-break: break-word;
+    }
+
+    /* =========================================================
+       TOAST
+       ========================================================= */
+
+    #toast {
+      position: fixed;
+
+      left: 50%;
+      bottom: 22px;
+
+      transform:
+        translate(-50%, 20px);
+
+      z-index: 10000;
+
+      min-width: 250px;
+
+      max-width: calc(100vw - 30px);
+
+      padding:
+        11px 15px;
+
+      border-radius: 10px;
+
+      background: #172536;
+
+      color: white;
+
+      box-shadow:
+        0 12px 30px rgba(0,0,0,.20);
+
+      font-size: 11px;
+
+      text-align: center;
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      transition:
+        opacity .25s,
+        transform .25s;
+    }
+
+    #toast.show {
+      opacity: 1;
+
+      transform:
+        translate(-50%, 0);
+    }
+
+    #toast.success {
+      background: #116a4b;
+    }
+
+    #toast.error {
+      background: #a82e25;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 1100px) {
+
+      .cases-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .stats-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+
+      body {
+        font-size: 13px;
+      }
+
+      .top-header {
+        height: 62px;
+      }
+
+      .header-inner {
+        padding:
+          0 13px;
+      }
+
+      .brand-logo {
+        width: 37px;
+        height: 37px;
+      }
+
+      .brand-title {
+        font-size: 15px;
+      }
+
+      .brand-subtitle {
+        display: none;
+      }
+
+      .header-button {
+        height: 34px;
+
+        padding:
+          0 10px;
+
+        font-size: 9px;
+      }
+
+      .header-button span {
+        display: none;
+      }
+
+      .dashboard-container {
+        padding:
+          12px 12px 25px;
+      }
+
+      .welcome-panel {
+        padding:
+          14px;
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+
+        border-radius: 13px;
+      }
+
+      .welcome-info h1 {
+        font-size: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+
+        gap: 8px;
+
+        margin-bottom: 14px;
+      }
+
+      .stat-card {
+        padding:
+          10px;
+
+        gap: 8px;
+      }
+
+      .stat-icon {
+        width: 32px;
+        height: 32px;
+
+        flex-basis: 32px;
+
+        font-size: 13px;
+      }
+
+      .stat-value {
+        font-size: 17px;
+      }
+
+      .stat-label {
+        font-size: 8px;
+      }
+
+      .cases-grid {
+        grid-template-columns: 1fr;
+
+        gap: 9px;
+      }
+
+      .case-header {
+        min-height: 64px;
+      }
+
+      .fields-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+
+        gap: 6px;
+      }
+
+      .case-body {
+        padding:
+          8px 10px 10px;
+      }
+
+      .progress-area {
+        padding:
+          8px 10px 6px;
+      }
+
+      .case-button {
+        min-height: 30px;
+
+        padding:
+          0 9px;
+
+        font-size: 8px;
+      }
+
+      .dashboard-footer {
+        padding:
+          0 12px 20px;
+      }
+
+      .footer-inner {
+        align-items: flex-start;
+
+        flex-direction: column;
+      }
+
+      .modal {
+        padding: 8px;
+      }
+
+      .modal-box {
+        max-height: 94vh;
+
+        border-radius: 13px;
+      }
+
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 380px) {
+
+      .login-card {
+        padding:
+          25px 19px 22px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .fields-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .case-actions {
+        flex-direction: column;
+      }
+
+      .case-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================================================
+       LOADING
+       ========================================================= -->
+
+  <div id="loadingScreen">
+    <div class="loading-box">
+
+      <div class="loading-logo-wrap">
+        <img
+          src="logo.png"
+          class="loading-logo"
+          alt="VIM"
+        >
+      </div>
+
+      <div class="loading-title">
+        VIM
+      </div>
+
+      <div class="loading-subtitle">
+        Case Management System
+      </div>
+
+      <div class="loading-line"></div>
+
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       LOGIN
+       ========================================================= -->
+
+  <section id="loginPage">
+
+    <div class="login-card">
+
+      <img
+        src="logo.png"
+        class="login-logo"
+        alt="VIM Logo"
+      >
+
+      <h1 class="login-title">
+        VIM
+      </h1>
+
+      <div class="login-subtitle">
+        HUMANITARIAN CASE MANAGEMENT
+      </div>
+
+      <div
+        id="loginError"
+        class="login-error"
+      ></div>
+
+      <form id="loginForm">
+
+        <div class="form-group">
+
+          <label
+            class="form-label"
+            for="passport"
+          >
+            Passport Number
+          </label>
+
+          <div class="input-wrap">
+
+            <i class="fa-solid fa-passport input-icon"></i>
+
+            <input
+              id="passport"
+              class="form-input"
+              type="text"
+              autocomplete="username"
+              placeholder="Enter passport number"
+              required
+            >
+
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label
+            class="form-label"
+            for="password"
+          >
+            Password
+          </label>
+
+          <div class="input-wrap">
+
+            <i class="fa-solid fa-lock input-icon"></i>
+
+            <input
+              id="password"
+              class="form-input"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Enter password"
+              required
+            >
+
+          </div>
+
+        </div>
+
+
+        <button
+          id="loginButton"
+          class="login-button"
+          type="submit"
+        >
+          <i class="fa-solid fa-right-to-bracket"></i>
+          &nbsp;
+          Login
+        </button>
+
+      </form>
+
+      <div class="login-footer">
+        VIM Humanitarian Case Management
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================================
+       DASHBOARD
+       ========================================================= -->
+
+  <section id="dashboardPage">
+
+    <header class="top-header">
+
+      <div class="header-inner">
+
+        <div class="brand">
+
+          <img
+            src="logo.png"
+            class="brand-logo"
+            alt="VIM"
+          >
+
+          <div class="brand-text">
+
+            <div class="brand-title">
+              VIM
+            </div>
+
+            <div class="brand-subtitle">
+              CASE MANAGEMENT
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+          <button
+            class="header-button"
+            type="button"
+            onclick="refreshCases()"
+          >
+            <i class="fa-solid fa-rotate"></i>
+            <span>Refresh</span>
+          </button>
+
+          <button
+            class="header-button logout"
+            type="button"
+            onclick="logout()"
+          >
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+          </button>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <main class="dashboard-container">
+
+      <!-- Welcome -->
+
+      <div class="welcome-panel">
+
+        <div class="welcome-info">
+
+          <h1 id="welcomeName">
+            Welcome
+          </h1>
+
+          <p>
+            Your humanitarian case information
+          </p>
+
+        </div>
+
+        <div
+          class="passport-badge"
+          id="passportBadge"
+        >
+          <i class="fa-solid fa-passport"></i>
+          <span id="passportText">-</span>
+        </div>
+
+      </div>
+
+
+      <!-- Stats -->
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            <i class="fa-solid fa-folder-open"></i>
+          </div>
+
+          <div class="stat-content">
+
+            <div
+              id="totalCases"
+              class="stat-value"
+            >
+              0
+            </div>
+
+            <div class="stat-label">
+              Total Cases
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+
+          <div class="stat-content">
+
+            <div
+              id="completedCases"
+              class="stat-value"
+            >
+              0
+            </div>
+
+            <div class="stat-label">
+              Completed
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            <i class="fa-solid fa-spinner"></i>
+          </div>
+
+          <div class="stat-content">
+
+            <div
+              id="activeCases"
+              class="stat-value"
+            >
+              0
+            </div>
+
+            <div class="stat-label">
+              In Progress
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+
+          <div class="stat-content">
+
+            <div
+              id="averageProgress"
+              class="stat-value"
+            >
+              0%
+            </div>
+
+            <div class="stat-label">
+              Average Progress
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Cases -->
+
+      <div class="section-header">
+
+        <h2 class="section-title">
+          <i class="fa-solid fa-folder-tree"></i>
+          My Cases
+        </h2>
+
+        <div
+          id="caseCount"
+          class="case-count"
+        >
+          0 Cases
+        </div>
+
+      </div>
+
+
+      <div
+        id="casesGrid"
+        class="cases-grid"
+      ></div>
+
+    </main>
+
+
+    <!-- Footer -->
+
+    <footer class="dashboard-footer">
+
+      <div class="footer-inner">
+
+        <div>
+          VIM Humanitarian Case Management
+        </div>
+
+        <a
+          class="whatsapp-link"
+          href="https://wa.me/93780412583"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fa-brands fa-whatsapp"></i>
+          +93780412583
+        </a>
+
+      </div>
+
+    </footer>
+
+  </section>
+
+
+  <!-- =========================================================
+       MODAL
+       ========================================================= -->
+
+  <div
+    id="caseModal"
+    class="modal"
+    onclick="closeModalOutside(event)"
+  >
+
+    <div class="modal-box">
+
+      <div class="modal-header">
+
+        <h3
+          id="modalTitle"
+          class="modal-title"
+        >
+          Case Details
+        </h3>
+
+        <button
+          class="modal-close"
+          type="button"
+          onclick="closeModal()"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+      </div>
+
+      <div
+        id="modalContent"
+        class="modal-content"
+      ></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Toast -->
+
+  <div id="toast"></div>
+
+
+  <script>
+
+    /* =========================================================
+       API
+       IMPORTANT:
+       Existing Google Apps Script URL is preserved.
+       ========================================================= */
+
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbxBuJiCxMmHZgWsP0QuCAyJDoYV_jkucX5aAAb6FjHgdTUSzi79kBSHBMAirVGtpyustA/exec";
+
+
+    let currentUser = null;
+    let currentCases = [];
+
+
+    /* =========================================================
+       INIT
+       ========================================================= */
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+      setTimeout(function() {
+
+        document
+          .getElementById("loadingScreen")
+          .classList.add("hide");
+
+      }, 900);
+
+
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", handleLogin);
+
+    });
+
+
+    /* =========================================================
+       LOGIN
+       ========================================================= */
+
+    async function handleLogin(event) {
+
+      event.preventDefault();
+
+      const passport =
+        document
+          .getElementById("passport")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("password")
+          .value;
+
+      const errorBox =
+        document.getElementById("loginError");
+
+      const button =
+        document.getElementById("loginButton");
+
+
+      errorBox.classList.remove("show");
+
+      if (!passport || !password) {
+
+        showLoginError(
+          "Please enter passport number and password."
+        );
+
+        return;
+      }
+
+
+      button.classList.add("loading");
+
+      button.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> &nbsp; Signing in...';
+
+
+      try {
+
+        const url =
+          API_URL +
+          "?action=login" +
+          "&passport=" +
+          encodeURIComponent(passport) +
+          "&password=" +
+          encodeURIComponent(password);
+
+
+        const response =
+          await fetch(
+            url,
+            {
+              method: "GET",
+              cache: "no-store"
+            }
+          );
+
+
+        if (!response.ok) {
+          throw new Error(
+            "Network error: " + response.status
+          );
+        }
+
+
+        const data =
+          await response.json();
+
+
+        if (
+          !data ||
+          data.success !== true
+        ) {
+
+          showLoginError(
+            data && data.message
+              ? data.message
+              : "Invalid passport number or password."
+          );
+
+          return;
+        }
+
+
+        currentUser =
+          data.user || {
+            passport: passport
+          };
+
+
+        currentCases =
+          Array.isArray(data.cases)
+            ? data.cases
+            : [];
+
+
+        showDashboard();
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        showLoginError(
+          "Unable to connect to the server. Please try again."
+        );
+
+      } finally {
+
+        button.classList.remove("loading");
+
+        button.innerHTML =
+          '<i class="fa-solid fa-right-to-bracket"></i> &nbsp; Login';
+
+      }
+
+    }
+
+
+    function showLoginError(message) {
+
+      const box =
+        document.getElementById("loginError");
+
+      box.textContent = message;
+
+      box.classList.add("show");
+
+    }
+
+
+    /* =========================================================
+       DASHBOARD
+       ========================================================= */
+
+    function showDashboard() {
+
+      document
+        .getElementById("loginPage")
+        .style.display = "none";
+
+
+      document
+        .getElementById("dashboardPage")
+        .style.display = "block";
+
+
+      const passport =
+        getUserValue(
+          currentUser,
+          [
+            "passport",
+            "Passport",
+            "Passport Number",
+            "passportNumber",
+            "شماره پاسپورت"
+          ]
+        );
+
+
+      const name =
+        getUserValue(
+          currentUser,
+          [
+            "name",
+            "Name",
+            "Full Name",
+            "fullName",
+            "نام",
+            "نام کامل"
+          ]
+        );
+
+
+      document
+        .getElementById("welcomeName")
+        .textContent =
+          name
+            ? "Welcome, " + name
+            : "Welcome";
+
+
+      document
+        .getElementById("passportText")
+        .textContent =
+          passport || "-";
+
+
+      renderStats();
+
+      renderCases();
+
+    }
+
+
+    /* =========================================================
+       STATS
+       ========================================================= */
+
+    function renderStats() {
+
+      const total =
+        currentCases.length;
+
+
+      let completed = 0;
+
+      let totalProgress = 0;
+
+
+      currentCases.forEach(function(caseData) {
+
+        const progress =
+          getProgress(caseData);
+
+
+        totalProgress += progress;
+
+
+        if (progress >= 100) {
+          completed++;
+        }
+
+      });
+
+
+      const active =
+        Math.max(
+          0,
+          total - completed
+        );
+
+
+      const average =
+        total > 0
+          ? Math.round(
+              totalProgress / total
+            )
+          : 0;
+
+
+      document
+        .getElementById("totalCases")
+        .textContent = total;
+
+
+      document
+        .getElementById("completedCases")
+        .textContent = completed;
+
+
+      document
+        .getElementById("activeCases")
+        .textContent = active;
+
+
+      document
+        .getElementById("averageProgress")
+        .textContent =
+          average + "%";
+
+
+      document
+        .getElementById("caseCount")
+        .textContent =
+          total + " Cases";
+
+    }
+
+
+    /* =========================================================
+       CASES
+       ========================================================= */
+
+    function renderCases() {
+
+      const grid =
+        document.getElementById("casesGrid");
+
+
+      grid.innerHTML = "";
+
+
+      if (!currentCases.length) {
+
+        grid.innerHTML = `
+
+          <div class="empty-state">
+
+            <i class="fa-solid fa-folder-open"></i>
+
+            <h3>No Cases Found</h3>
+
+            <p>
+              No case is currently associated with your account.
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+      }
+
+
+      currentCases.forEach(
+        function(caseData, index) {
+
+          grid.appendChild(
+            createCaseCard(
+              caseData,
+              index
+            )
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       CREATE CASE CARD
+       ========================================================= */
+
+    function createCaseCard(caseData, index) {
+
+      const card =
+        document.createElement("article");
+
+      card.className =
+        "case-card";
+
+      card.style.animationDelay =
+        (index * 50) + "ms";
+
+
+      const caseNumber =
+        getValue(
+          caseData,
+          [
+            "Case Number",
+            "case number",
+            "Case No",
+            "Case ID",
+            "case_id",
+            "شماره پرونده",
+            "نمبر پرونده"
+          ]
+        ) ||
+        ("CASE-" + (index + 1));
+
+
+      const title =
+        getValue(
+          caseData,
+          [
+            "Case Title",
+            "case title",
+            "Title",
+            "Visa Type",
+            "visa type",
+            "نوع ویزا",
+            "عنوان پرونده"
+          ]
+        ) ||
+        "Humanitarian Case";
+
+
+      /*
+        Country detection:
+        First look for a dedicated country column.
+        If not found, inspect the case data for country names.
+      */
+
+      const country =
+        findCountry(
+          caseData,
+          title
+        );
+
+
+      const flag =
+        getCountryFlag(country);
+
+
+      const progress =
+        getProgress(caseData);
+
+
+      const completed =
+        progress >= 100;
+
+
+      const countryDisplay =
+        country
+          ? escapeHtml(country)
+          : "";
+
+
+      const fields =
+        getDisplayFields(caseData);
+
+
+      const links =
+        getLinkFields(caseData);
+
+
+      let fieldsHtml = "";
+
+
+      if (fields.length) {
+
+        fieldsHtml = `
+
+          <div class="fields-grid">
+
+            ${fields
+              .map(function(field) {
+
+                return `
+
+                  <div class="field-item">
+
+                    <div class="field-label">
+                      ${escapeHtml(field.key)}
+                    </div>
+
+                    <div class="field-value">
+                      ${formatValue(field.value)}
+                    </div>
+
+                  </div>
+
+                `;
+
+              })
+              .join("")
+            }
+
+          </div>
+
+        `;
+
+      }
+
+
+      let linkButtonsHtml = "";
+
+
+      if (links.length) {
+
+        linkButtonsHtml =
+          links
+            .map(function(link) {
+
+              return `
+
+                <a
+                  class="case-button external"
+                  href="${escapeAttribute(link.url)}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                  ${escapeHtml(link.key)}
+
+                </a>
+
+              `;
+
+            })
+            .join("");
+
+      }
+
+
+      const documentLinks =
+        getDocumentLinks(caseData);
+
+
+      let documentButtonsHtml = "";
+
+
+      if (documentLinks.length) {
+
+        documentButtonsHtml =
+          documentLinks
+            .map(function(link) {
+
+              return `
+
+                <a
+                  class="case-button document"
+                  href="${escapeAttribute(link.url)}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+
+                  <i class="fa-solid fa-file-arrow-down"></i>
+
+                  ${escapeHtml(link.key)}
+
+                </a>
+
+              `;
+
+            })
+            .join("");
+
+      }
+
+
+      card.innerHTML = `
+
+        <div class="case-header">
+
+          <div class="case-header-top">
+
+            <div class="country-flag">
+
+              ${
+                flag.image
+                  ? `
+                    <img
+                      src="${flag.image}"
+                      alt="${escapeAttribute(country || "Country")}"
+                      loading="lazy"
+                      onerror="this.style.display='none'; this.parentElement.textContent='${flag.emoji}'"
+                    >
+                  `
+                  : flag.emoji
+              }
+
+            </div>
+
+
+            <div class="case-title-box">
+
+              <div class="case-number">
+                ${escapeHtml(caseNumber)}
+              </div>
+
+              <h3 class="case-title">
+                ${escapeHtml(title)}
+              </h3>
+
+              ${
+                countryDisplay
+                  ? `
+                    <div class="case-country">
+                      ${countryDisplay}
+                    </div>
+                  `
+                  : ""
+              }
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="
+            progress-area
+            ${completed ? "progress-completed" : ""}
+          "
+        >
+
+          <div class="progress-top">
+
+            <div class="progress-label">
+
+              ${
+                completed
+                  ? "Apply Completed"
+                  : "Application Progress"
+              }
+
+            </div>
+
+            <div class="progress-value">
+              ${progress}%
+            </div>
+
+          </div>
+
+          <div class="progress-track">
+
+            <div
+              class="progress-bar"
+              style="width:${progress}%"
+            ></div>
+
+          </div>
+
+        </div>
+
+
+        <div class="case-body">
+
+          ${fieldsHtml}
+
+
+          <div class="case-actions">
+
+            <button
+              class="case-button primary"
+              type="button"
+              onclick='openCaseModal(${JSON.stringify(caseData).replace(/'/g, "&#39;")})'
+            >
+
+              <i class="fa-solid fa-eye"></i>
+
+              View Case
+
+            </button>
+
+            ${documentButtonsHtml}
+
+            ${linkButtonsHtml}
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      return card;
+
+    }
+
+
+    /* =========================================================
+       COUNTRY DETECTION
+       ========================================================= */
+
+    function findCountry(caseData, title) {
+
+      const countryKeys = [
+
+        "Country",
+        "country",
+        "Country Name",
+        "country name",
+        "Country of Application",
+        "Country Applied",
+        "Destination Country",
+        "Destination",
+        "Visa Country",
+        "کشور",
+        "کشور مقصد",
+        "کشور درخواست",
+        "کشور مورد درخواست"
+
+      ];
+
+
+      for (const key of countryKeys) {
+
+        const value =
+          getValue(
+            caseData,
+            [key]
+          );
+
+
+        if (
+          value !== null &&
+          value !== undefined &&
+          String(value).trim()
+        ) {
+
+          return String(value).trim();
+
+        }
+
+      }
+
+
+      /*
+        If no dedicated country column exists,
+        inspect all values in the case.
+      */
+
+      const values =
+        Object.values(caseData || {});
+
+
+      for (const value of values) {
+
+        if (
+          value === null ||
+          value === undefined
+        ) {
+          continue;
+        }
+
+
+        const text =
+          String(value).trim();
+
+
+        if (!text) {
+          continue;
+        }
+
+
+        const detected =
+          detectCountryFromText(text);
+
+
+        if (detected) {
+          return detected;
+        }
+
+      }
+
+
+      /*
+        Finally inspect title.
+      */
+
+      if (title) {
+
+        const detected =
+          detectCountryFromText(title);
+
+        if (detected) {
+          return detected;
+        }
+
+      }
+
+
+      return "";
+
+    }
+
+
+    function detectCountryFromText(text) {
+
+      const value =
+        normalizeText(text);
+
+
+      const countries = [
+
+        {
+          name: "Brazil",
+          keys: [
+            "brazil",
+            "برازیل"
+          ]
+        },
+
+        {
+          name: "Canada",
+          keys: [
+            "canada",
+            "کانادا"
+          ]
+        },
+
+        {
+          name: "United Kingdom",
+          keys: [
+            "uk",
+            "u.k",
+            "united kingdom",
+            "great britain",
+            "england",
+            "britain",
+            "انگلستان",
+            "بریتانیا"
+          ]
+        },
+
+        {
+          name: "United States",
+          keys: [
+            "usa",
+            "u.s.a",
+            "us",
+            "u.s",
+            "united states",
+            "united states of america",
+            "america",
+            "امریکا",
+            "آمریکا"
+          ]
+        },
+
+        {
+          name: "Switzerland",
+          keys: [
+            "swiss",
+            "switzerland",
+            "سوئیس",
+            "سویس"
+          ]
+        },
+
+        {
+          name: "France",
+          keys: [
+            "france",
+            "فرانسه"
+          ]
+        },
+
+        {
+          name: "Australia",
+          keys: [
+            "australia",
+            "استرالیا"
+          ]
+        },
+
+        {
+          name: "Germany",
+          keys: [
+            "germany",
+            "deutschland",
+            "آلمان"
+          ]
+        },
+
+        {
+          name: "Italy",
+          keys: [
+            "italy",
+            "ایتالیا"
+          ]
+        },
+
+        {
+          name: "Spain",
+          keys: [
+            "spain",
+            "اسپانیا"
+          ]
+        },
+
+        {
+          name: "Netherlands",
+          keys: [
+            "netherlands",
+            "holland",
+            "هلند"
+          ]
+        },
+
+        {
+          name: "Belgium",
+          keys: [
+            "belgium",
+            "بلجیم",
+            "بلژیک"
+          ]
+        },
+
+        {
+          name: "Sweden",
+          keys: [
+            "sweden",
+            "سویدن",
+            "سوئد"
+          ]
+        },
+
+        {
+          name: "Norway",
+          keys: [
+            "norway",
+            "ناروی",
+            "نروژ"
+          ]
+        },
+
+        {
+          name: "Denmark",
+          keys: [
+            "denmark",
+            "دنمارک",
+            "دانمارک"
+          ]
+        },
+
+        {
+          name: "Finland",
+          keys: [
+            "finland",
+            "فنلاند"
+          ]
+        },
+
+        {
+          name: "New Zealand",
+          keys: [
+            "new zealand",
+            "نیوزیلند"
+          ]
+        },
+
+        {
+          name: "Ireland",
+          keys: [
+            "ireland",
+            "ایرلند"
+          ]
+        },
+
+        {
+          name: "Austria",
+          keys: [
+            "austria",
+            "اتریش"
+          ]
+        },
+
+        {
+          name: "Portugal",
+          keys: [
+            "portugal",
+            "پرتگال",
+            "پرتغال"
+          ]
+        },
+
+        {
+          name: "Greece",
+          keys: [
+            "greece",
+            "یونان"
+          ]
+        },
+
+        {
+          name: "Poland",
+          keys: [
+            "poland",
+            "پولند",
+            "لهستان"
+          ]
+        },
+
+        {
+          name: "Czech Republic",
+          keys: [
+            "czech republic",
+            "czechia",
+            "جمهوری چک"
+          ]
+        },
+
+        {
+          name: "Hungary",
+          keys: [
+            "hungary",
+            "مجارستان"
+          ]
+        },
+
+        {
+          name: "Romania",
+          keys: [
+            "romania",
+            "رومانی"
+          ]
+        },
+
+        {
+          name: "Turkey",
+          keys: [
+            "turkey",
+            "ترکیه"
+          ]
+        },
+
+        {
+          name: "United Arab Emirates",
+          keys: [
+            "uae",
+            "u.a.e",
+            "united arab emirates",
+            "امارات",
+            "امارات متحده عربی"
+          ]
+        },
+
+        {
+          name: "Qatar",
+          keys: [
+            "qatar",
+            "قطر"
+          ]
+        },
+
+        {
+          name: "Saudi Arabia",
+          keys: [
+            "saudi arabia",
+            "عربستان سعودی"
+          ]
+        },
+
+        {
+          name: "India",
+          keys: [
+            "india",
+            "هند"
+          ]
+        },
+
+        {
+          name: "Pakistan",
+          keys: [
+            "pakistan",
+            "پاکستان"
+          ]
+        },
+
+        {
+          name: "Afghanistan",
+          keys: [
+            "afghanistan",
+            "افغانستان"
+          ]
+        },
+
+        {
+          name: "Iran",
+          keys: [
+            "iran",
+            "ایران"
+          ]
+        },
+
+        {
+          name: "Japan",
+          keys: [
+            "japan",
+            "جاپان"
+          ]
+        },
+
+        {
+          name: "South Korea",
+          keys: [
+            "south korea",
+            "republic of korea",
+            "کوریای جنوبی",
+            "کره جنوبی"
+          ]
+        },
+
+        {
+          name: "China",
+          keys: [
+            "china",
+            "چین"
+          ]
+        },
+
+        {
+          name: "Russia",
+          keys: [
+            "russia",
+            "روسیه"
+          ]
+        },
+
+        {
+          name: "Ukraine",
+          keys: [
+            "ukraine",
+            "اوکراین"
+          ]
+        },
+
+        {
+          name: "Brazil",
+          keys: [
+            "brazil",
+            "برازیل"
+          ]
+        },
+
+        {
+          name: "Argentina",
+          keys: [
+            "argentina",
+            "ارجنتاین",
+            "آرژانتین"
+          ]
+        },
+
+        {
+          name: "Mexico",
+          keys: [
+            "mexico",
+            "مکزیک"
+          ]
+        },
+
+        {
+          name: "South Africa",
+          keys: [
+            "south africa",
+            "افریقای جنوبی",
+            "آفریقای جنوبی"
+          ]
+        }
+
+      ];
+
+
+      for (const country of countries) {
+
+        for (const key of country.keys) {
+
+          if (
+            value === key ||
+            value.includes(key)
+          ) {
+
+            return country.name;
+
+          }
+
+        }
+
+      }
+
+
+      return "";
+
+    }
+
+
+    /* =========================================================
+       FLAG
+       ========================================================= */
+
+    function getCountryFlag(country) {
+
+      const name =
+        normalizeText(country);
+
+
+      /*
+        Free online flag images.
+        FlagCDN is used for country flags.
+      */
+
+      const flags = {
+
+        "brazil": {
+          emoji: "🇧🇷",
+          image: "https://flagcdn.com/w80/br.png"
+        },
+
+        "canada": {
+          emoji: "🇨🇦",
+          image: "https://flagcdn.com/w80/ca.png"
+        },
+
+        "united kingdom": {
+          emoji: "🇬🇧",
+          image: "https://flagcdn.com/w80/gb.png"
+        },
+
+        "united states": {
+          emoji: "🇺🇸",
+          image: "https://flagcdn.com/w80/us.png"
+        },
+
+        "switzerland": {
+          emoji: "🇨🇭",
+          image: "https://flagcdn.com/w80/ch.png"
+        },
+
+        "france": {
+          emoji: "🇫🇷",
+          image: "https://flagcdn.com/w80/fr.png"
+        },
+
+        "australia": {
+          emoji: "🇦🇺",
+          image: "https://flagcdn.com/w80/au.png"
+        },
+
+        "germany": {
+          emoji: "🇩🇪",
+          image: "https://flagcdn.com/w80/de.png"
+        },
+
+        "italy": {
+          emoji: "🇮🇹",
+          image: "https://flagcdn.com/w80/it.png"
+        },
+
+        "spain": {
+          emoji: "🇪🇸",
+          image: "https://flagcdn.com/w80/es.png"
+        },
+
+        "netherlands": {
+          emoji: "🇳🇱",
+          image: "https://flagcdn.com/w80/nl.png"
+        },
+
+        "belgium": {
+          emoji: "🇧🇪",
+          image: "https://flagcdn.com/w80/be.png"
+        },
+
+        "sweden": {
+          emoji: "🇸🇪",
+          image: "https://flagcdn.com/w80/se.png"
+        },
+
+        "norway": {
+          emoji: "🇳🇴",
+          image: "https://flagcdn.com/w80/no.png"
+        },
+
+        "denmark": {
+          emoji: "🇩🇰",
+          image: "https://flagcdn.com/w80/dk.png"
+        },
+
+        "finland": {
+          emoji: "🇫🇮",
+          image: "https://flagcdn.com/w80/fi.png"
+        },
+
+        "new zealand": {
+          emoji: "🇳🇿",
+          image: "https://flagcdn.com/w80/nz.png"
+        },
+
+        "ireland": {
+          emoji: "🇮🇪",
+          image: "https://flagcdn.com/w80/ie.png"
+        },
+
+        "austria": {
+          emoji: "🇦🇹",
+          image: "https://flagcdn.com/w80/at.png"
+        },
+
+        "portugal": {
+          emoji: "🇵🇹",
+          image: "https://flagcdn.com/w80/pt.png"
+        },
+
+        "greece": {
+          emoji: "🇬🇷",
+          image: "https://flagcdn.com/w80/gr.png"
+        },
+
+        "poland": {
+          emoji: "🇵🇱",
+          image: "https://flagcdn.com/w80/pl.png"
+        },
+
+        "czech republic": {
+          emoji: "🇨🇿",
+          image: "https://flagcdn.com/w80/cz.png"
+        },
+
+        "hungary": {
+          emoji: "🇭🇺",
+          image: "https://flagcdn.com/w80/hu.png"
+        },
+
+        "romania": {
+          emoji: "🇷🇴",
+          image: "https://flagcdn.com/w80/ro.png"
+        },
+
+        "turkey": {
+          emoji: "🇹🇷",
+          image: "https://flagcdn.com/w80/tr.png"
+        },
+
+        "united arab emirates": {
+          emoji: "🇦🇪",
+          image: "https://flagcdn.com/w80/ae.png"
+        },
+
+        "qatar": {
+          emoji: "🇶🇦",
+          image: "https://flagcdn.com/w80/qa.png"
+        },
+
+        "saudi arabia": {
+          emoji: "🇸🇦",
+          image: "https://flagcdn.com/w80/sa.png"
+        },
+
+        "india": {
+          emoji: "🇮🇳",
+          image: "https://flagcdn.com/w80/in.png"
+        },
+
+        "pakistan": {
+          emoji: "🇵🇰",
+          image: "https://flagcdn.com/w80/pk.png"
+        },
+
+        "afghanistan": {
+          emoji: "🇦🇫",
+          image: "https://flagcdn.com/w80/af.png"
+        },
+
+        "iran": {
+          emoji: "🇮🇷",
+          image: "https://flagcdn.com/w80/ir.png"
+        },
+
+        "japan": {
+          emoji: "🇯🇵",
+          image: "https://flagcdn.com/w80/jp.png"
+        },
+
+        "south korea": {
+          emoji: "🇰🇷",
+          image: "https://flagcdn.com/w80/kr.png"
+        },
+
+        "china": {
+          emoji: "🇨🇳",
+          image: "https://flagcdn.com/w80/cn.png"
+        },
+
+        "russia": {
+          emoji: "🇷🇺",
+          image: "https://flagcdn.com/w80/ru.png"
+        },
+
+        "ukraine": {
+          emoji: "🇺🇦",
+          image: "https://flagcdn.com/w80/ua.png"
+        },
+
+        "argentina": {
+          emoji: "🇦🇷",
+          image: "https://flagcdn.com/w80/ar.png"
+        },
+
+        "mexico": {
+          emoji: "🇲🇽",
+          image: "https://flagcdn.com/w80/mx.png"
+        },
+
+        "south africa": {
+          emoji: "🇿🇦",
+          image: "https://flagcdn.com/w80/za.png"
+        }
+
+      };
+
+
+      /*
+        Exact matches.
+      */
+
+      if (flags[name]) {
+        return flags[name];
+      }
+
+
+      /*
+        Alias matching.
+      */
+
+      if (
+        name.includes("brazil") ||
+        name.includes("برازیل")
+      ) {
+
+        return flags["brazil"];
+
+      }
+
+
+      if (
+        name.includes("canada") ||
+        name.includes("کانادا")
+      ) {
+
+        return flags["canada"];
+
+      }
+
+
+      if (
+        name.includes("united kingdom") ||
+        name.includes("great britain") ||
+        name.includes("england") ||
+        name.includes("britain") ||
+        name === "uk" ||
+        name.includes("انگلستان") ||
+        name.includes("بریتانیا")
+      ) {
+
+        return flags["united kingdom"];
+
+      }
+
+
+      if (
+        name.includes("united states") ||
+        name.includes("america") ||
+        name === "usa" ||
+        name === "us" ||
+        name.includes("امریکا") ||
+        name.includes("آمریکا")
+      ) {
+
+        return flags["united states"];
+
+      }
+
+
+      if (
+        name.includes("switzerland") ||
+        name.includes("swiss") ||
+        name.includes("سوئیس") ||
+        name.includes("سویس")
+      ) {
+
+        return flags["switzerland"];
+
+      }
+
+
+      if (
+        name.includes("france") ||
+        name.includes("فرانسه")
+      ) {
+
+        return flags["france"];
+
+      }
+
+
+      if (
+        name.includes("australia") ||
+        name.includes("استرالیا")
+      ) {
+
+        return flags["australia"];
+
+      }
+
+
+      /*
+        Unknown country:
+        Use a neutral flag icon rather than the 🌍 sticker.
+      */
+
+      return {
+        emoji: "🏳️",
+        image: ""
+      };
+
+    }
+
+
+    /* =========================================================
+       PROGRESS
+       ========================================================= */
+
+    function getProgress(caseData) {
+
+      const raw =
+        getValue(
+          caseData,
+          [
+            "Applied Completed",
+            "applied completed",
+            "AppliedCompleted",
+            "Applied_Completed",
+            "Application Progress",
+            "Progress",
+            "progress",
+            "پروسه",
+            "درصد پیشرفت"
+          ]
+        );
+
+
+      if (
+        raw === null ||
+        raw === undefined ||
+        raw === ""
+      ) {
+
+        return 0;
+
+      }
+
+
+      let text =
+        String(raw)
+          .trim()
+          .replace("%", "")
+          .replace(",", ".");
+
+
+      let number =
+        parseFloat(text);
+
+
+      if (isNaN(number)) {
+        return 0;
+      }
+
+
+      /*
+        If backend returns 1 instead of 100,
+        treat 1 as 1%, not 100%.
+      */
+
+      number =
+        Math.max(
+          0,
+          Math.min(
+            100,
+            number
+          )
+        );
+
+
+      return Math.round(number);
+
+    }
+
+
+    /* =========================================================
+       DOCUMENT LINKS
+       ========================================================= */
+
+    function getDocumentLinks(caseData) {
+
+      const result = [];
+
+
+      Object.keys(caseData || {})
+        .forEach(function(key) {
+
+          const value =
+            caseData[key];
+
+
+          if (
+            value === null ||
+            value === undefined
+          ) {
+            return;
+          }
+
+
+          const url =
+            extractUrl(value);
+
+
+          if (!url) {
+            return;
+          }
+
+
+          const normalized =
+            normalizeText(key);
+
+
+          /*
+            Document-related columns.
+          */
+
+          const isDocument =
+            normalized.includes("document") ||
+            normalized.includes("documents") ||
+            normalized.includes("doc") ||
+            normalized.includes("مدرک") ||
+            normalized.includes("مدارک") ||
+            normalized.includes("اسناد");
+
+
+          if (isDocument) {
+
+            result.push({
+              key: key,
+              url: url
+            });
+
+          }
+
+        });
+
+
+      return uniqueLinks(result);
+
+    }
+
+
+    /* =========================================================
+       OTHER LINK COLUMNS
+       ========================================================= */
+
+    function getLinkFields(caseData) {
+
+      const result = [];
+
+
+      Object.keys(caseData || {})
+        .forEach(function(key) {
+
+          const value =
+            caseData[key];
+
+
+          if (
+            value === null ||
+            value === undefined
+          ) {
+            return;
+          }
+
+
+          const url =
+            extractUrl(value);
+
+
+          if (!url) {
+            return;
+          }
+
+
+          const normalized =
+            normalizeText(key);
+
+
+          /*
+            Do not duplicate document buttons.
+          */
+
+          const isDocument =
+            normalized.includes("document") ||
+            normalized.includes("documents") ||
+            normalized.includes("doc") ||
+            normalized.includes("مدرک") ||
+            normalized.includes("مدارک") ||
+            normalized.includes("اسناد");
+
+
+          if (isDocument) {
+            return;
+          }
+
+
+          result.push({
+            key: key,
+            url: url
+          });
+
+        });
+
+
+      return uniqueLinks(result);
+
+    }
+
+
+    function uniqueLinks(list) {
+
+      const seen = new Set();
+
+
+      return list.filter(function(item) {
+
+        const key =
+          item.key +
+          "|" +
+          item.url;
+
+
+        if (seen.has(key)) {
+          return false;
+        }
+
+
+        seen.add(key);
+
+        return true;
+
+      });
+
+    }
+
+
+    function extractUrl(value) {
+
+      const text =
+        String(value).trim();
+
+
+      /*
+        Direct URL.
+      */
+
+      if (
+        /^https?:\/\/\S+$/i.test(text)
+      ) {
+
+        return text;
+
+      }
+
+
+      /*
+        HTML anchor.
+      */
+
+      const anchor =
+        text.match(
+          /href=["']([^"']+)["']/i
+        );
+
+
+      if (
+        anchor &&
+        anchor[1]
+      ) {
+
+        return anchor[1];
+
+      }
+
+
+      /*
+        Search inside text.
+      */
+
+      const match =
+        text.match(
+          /(https?:\/\/[^\s<>"']+)/i
+        );
+
+
+      if (
+        match &&
+        match[1]
+      ) {
+
+        return match[1];
+
+      }
+
+
+      return "";
+
+    }
+
+
+    /* =========================================================
+       DISPLAY FIELDS
+       ========================================================= */
+
+    function getDisplayFields(caseData) {
+
+      const excluded = new Set([
+
+        "case number",
+        "case no",
+        "case id",
+        "case title",
+        "title",
+        "visa type",
+        "country",
+        "country name",
+        "country of application",
+        "destination country",
+        "destination",
+        "visa country",
+        "applied completed",
+        "application progress",
+        "progress",
+
+        "passport",
+        "passport number",
+
+        "password"
+
+      ].map(normalizeText));
+
+
+      const result = [];
+
+
+      Object.keys(caseData || {})
+        .forEach(function(key) {
+
+          const value =
+            caseData[key];
+
+
+          if (
+            value === null ||
+            value === undefined
+          ) {
+            return;
+          }
+
+
+          const text =
+            String(value).trim();
+
+
+          /*
+            Hide empty fields.
+          */
+
+          if (!text) {
+            return;
+          }
+
+
+          const normalizedKey =
+            normalizeText(key);
+
+
+          /*
+            Never show password.
+          */
+
+          if (
+            normalizedKey.includes("password") &&
+            normalizedKey !== "passport"
+          ) {
+
+            return;
+
+          }
+
+
+          /*
+            Hide title / case number / country
+            from the small information grid.
+          */
+
+          if (
+            excluded.has(normalizedKey)
+          ) {
+
+            return;
+
+          }
+
+
+          /*
+            Links are shown as buttons.
+          */
+
+          if (
+            extractUrl(text)
+          ) {
+
+            return;
+
+          }
+
+
+          result.push({
+            key: key,
+            value: value
+          });
+
+        });
+
+
+      return result;
+
+    }
+
+
+    /* =========================================================
+       MODAL
+       ========================================================= */
+
+    function openCaseModal(caseData) {
+
+      const title =
+        getValue(
+          caseData,
+          [
+            "Case Title",
+            "case title",
+            "Title",
+            "Visa Type",
+            "visa type",
+            "نوع ویزا",
+            "عنوان پرونده"
+          ]
+        ) ||
+        "Case Details";
+
+
+      document
+        .getElementById("modalTitle")
+        .textContent =
+          title;
+
+
+      const fields =
+        Object.keys(caseData || {})
+          .map(function(key) {
+
+            return {
+              key: key,
+              value: caseData[key]
+            };
+
+          })
+          .filter(function(item) {
+
+            return (
+              item.value !== null &&
+              item.value !== undefined &&
+              String(item.value).trim() !== "" &&
+              !(
+                normalizeText(item.key)
+                  .includes("password") &&
+                normalizeText(item.key) !== "passport"
+              )
+            );
+
+          });
+
+
+      const content =
+        document.getElementById(
+          "modalContent"
+        );
+
+
+      if (!fields.length) {
+
+        content.innerHTML =
+          "<p>No information available.</p>";
+
+      } else {
+
+        content.innerHTML = `
+
+          <div class="modal-grid">
+
+            ${fields
+              .map(function(item) {
+
+                const url =
+                  extractUrl(item.value);
+
+
+                if (url) {
+
+                  return `
+
+                    <div class="modal-field">
+
+                      <div class="modal-field-label">
+                        ${escapeHtml(item.key)}
+                      </div>
+
+                      <div class="modal-field-value">
+
+                        <a
+                          class="case-button external"
+                          href="${escapeAttribute(url)}"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+
+                          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                          ${escapeHtml(item.key)}
+
+                        </a>
+
+                      </div>
+
+                    </div>
+
+                  `;
+
+                }
+
+
+                return `
+
+                  <div class="modal-field">
+
+                    <div class="modal-field-label">
+                      ${escapeHtml(item.key)}
+                    </div>
+
+                    <div class="modal-field-value">
+                      ${formatValue(item.value)}
+                    </div>
+
+                  </div>
+
+                `;
+
+              })
+              .join("")
+            }
+
+          </div>
+
+        `;
+
+      }
+
+
+      document
+        .getElementById("caseModal")
+        .classList.add("show");
+
+
+      document.body.style.overflow =
+        "hidden";
+
+    }
+
+
+    function closeModal() {
+
+      document
+        .getElementById("caseModal")
+        .classList.remove("show");
+
+
+      document.body.style.overflow =
+        "";
+
+    }
+
+
+    function closeModalOutside(event) {
+
+      if (
+        event.target.id === "caseModal"
+      ) {
+
+        closeModal();
+
+      }
+
+    }
+
+
+    document.addEventListener(
+      "keydown",
+      function(event) {
+
+        if (
+          event.key === "Escape"
+        ) {
+
+          closeModal();
+
+        }
+
+      }
+    );
+
+
+    /* =========================================================
+       REFRESH
+       ========================================================= */
+
+    async function refreshCases() {
+
+      if (!currentUser) {
+        return;
+      }
+
+
+      const passport =
+        getUserValue(
+          currentUser,
+          [
+            "passport",
+            "Passport",
+            "Passport Number",
+            "passportNumber",
+            "شماره پاسپورت"
+          ]
+        );
+
+
+      if (!passport) {
+        return;
+      }
+
+
+      showToast(
+        "Refreshing...",
+        "success"
+      );
+
+
+      try {
+
+        const url =
+          API_URL +
+          "?action=login" +
+          "&passport=" +
+          encodeURIComponent(passport) +
+          "&password=" +
+          encodeURIComponent(
+            sessionStorage.getItem(
+              "vim_password"
+            ) || ""
+          );
+
+
+        const response =
+          await fetch(
+            url,
+            {
+              method: "GET",
+              cache: "no-store"
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (
+          data &&
+          data.success === true
+        ) {
+
+          currentUser =
+            data.user || currentUser;
+
+
+          currentCases =
+            Array.isArray(data.cases)
+              ? data.cases
+              : [];
+
+
+          renderStats();
+
+          renderCases();
+
+
+          showToast(
+            "Cases updated.",
+            "success"
+          );
+
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        showToast(
+          "Unable to refresh cases.",
+          "error"
+        );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       LOGOUT
+       ========================================================= */
+
+    function logout() {
+
+      currentUser = null;
+
+      currentCases = [];
+
+
+      sessionStorage.removeItem(
+        "vim_password"
+      );
+
+
+      document
+        .getElementById("dashboardPage")
+        .style.display = "none";
+
+
+      document
+        .getElementById("loginPage")
+        .style.display = "flex";
+
+
+      document
+        .getElementById("passport")
+        .value = "";
+
+
+      document
+        .getElementById("password")
+        .value = "";
+
+
+      document
+        .getElementById("casesGrid")
+        .innerHTML = "";
+
+
+      window.scrollTo(
+        0,
+        0
+      );
+
+    }
+
+
+    /* =========================================================
+       GENERIC VALUE HELPERS
+       ========================================================= */
+
+    function getValue(object, keys) {
+
+      if (
+        !object ||
+        typeof object !== "object"
+      ) {
+
+        return "";
+
+      }
+
+
+      for (const key of keys) {
+
+        if (
+          Object.prototype.hasOwnProperty.call(
+            object,
+            key
+          )
+        ) {
+
+          const value =
+            object[key];
+
+
+          if (
+            value !== null &&
+            value !== undefined &&
+            String(value).trim() !== ""
+          ) {
+
+            return value;
+
+          }
+
+        }
+
+      }
+
+
+      /*
+        Case-insensitive fallback.
+      */
+
+      const objectKeys =
+        Object.keys(object);
+
+
+      for (const wanted of keys) {
+
+        const wantedNormalized =
+          normalizeText(wanted);
+
+
+        for (const actualKey of objectKeys) {
+
+          if (
+            normalizeText(actualKey) ===
+            wantedNormalized
+          ) {
+
+            const value =
+              object[actualKey];
+
+
+            if (
+              value !== null &&
+              value !== undefined &&
+              String(value).trim() !== ""
+            ) {
+
+              return value;
+
+            }
+
+          }
+
+        }
+
+      }
+
+
+      return "";
+
+    }
+
+
+    function getUserValue(object, keys) {
+
+      return getValue(
+        object,
+        keys
+      );
+
+    }
+
+
+    function normalizeText(value) {
+
+      return String(value || "")
+        .toLowerCase()
+        .trim()
+        .replace(/[.]/g, "")
+        .replace(/\s+/g, " ");
+
+    }
+
+
+    /* =========================================================
+       FORMATTING
+       ========================================================= */
+
+    function formatValue(value) {
+
+      if (
+        value === null ||
+        value === undefined
+      ) {
+
+        return "";
+
+      }
+
+
+      const text =
+        String(value)
+          .trim();
+
+
+      if (!text) {
+        return "";
+      }
+
+
+      /*
+        Preserve simple line breaks.
+      */
+
+      return escapeHtml(text)
+        .replace(
+          /\n/g,
+          "<br>"
+        );
+
+    }
+
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+    function escapeAttribute(value) {
+
+      return escapeHtml(value);
+
+    }
+
+
+    /* =========================================================
+       TOAST
+       ========================================================= */
+
+    let toastTimer = null;
+
+
+    function showToast(
+      message,
+      type = ""
+    ) {
+
+      const toast =
+        document.getElementById(
+          "toast"
+        );
+
+
+      toast.textContent =
+        message;
+
+
+      toast.className =
+        "show " + type;
+
+
+      clearTimeout(
+        toastTimer
+      );
+
+
+      toastTimer =
+        setTimeout(
+          function() {
+
+            toast.className = "";
+
+          },
+          2500
+        );
+
+    }
+
+
+    /* =========================================================
+       SAVE PASSWORD FOR REFRESH
+       =========================================================
+
+       The password is kept only in sessionStorage so the
+       Refresh button can use the same backend login endpoint.
+       It disappears when the browser session is closed.
+       ========================================================= */
+
+    document
+      .getElementById("loginForm")
+      .addEventListener(
+        "submit",
+        function() {
+
+          const password =
+            document
+              .getElementById("password")
+              .value;
+
+
+          if (password) {
+
+            sessionStorage.setItem(
+              "vim_password",
+              password
+            );
+
+          }
+
+        }
+      );
+
+  </script>
+
+</body>
+</html>
