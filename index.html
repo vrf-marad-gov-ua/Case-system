@@ -357,6 +357,60 @@
       }
     }
 
+    .login-visual-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      margin: 0 auto 14px;
+    }
+
+    .login-visual {
+      min-height: 70px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), 0 7px 18px rgba(15,42,68,.12);
+    }
+
+    .login-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.16), transparent 55%);
+      pointer-events: none;
+    }
+
+    .login-visual i {
+      position: relative;
+      z-index: 1;
+      font-size: 22px;
+    }
+
+    .login-visual span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-visual.migration {
+      background: linear-gradient(135deg, #173f67, #3c739f);
+    }
+
+    .login-visual.humanitarian {
+      background: linear-gradient(135deg, #8b6a1b, #c9a227);
+    }
+
+    .login-visual.travel {
+      background: linear-gradient(135deg, #176b62, #2a9b8e);
+    }
+
     .login-logo {
       width: 105px;
       height: 105px;
@@ -630,6 +684,142 @@
       gap: 8px;
     }
 
+    .notification-wrap {
+      position: relative;
+    }
+
+    .notification-button {
+      position: relative;
+      width: 38px;
+      padding: 0;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      left: -4px;
+      min-width: 17px;
+      height: 17px;
+      padding: 0 4px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      background: var(--danger);
+      color: #fff;
+      font-size: 8px;
+      font-weight: 900;
+      border: 2px solid #fff;
+      animation: notificationPulse 1.5s infinite;
+    }
+
+    .notification-badge.show { display: flex; }
+
+    @keyframes notificationPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    .notification-panel {
+      position: absolute;
+      top: calc(100% + 9px);
+      left: 0;
+      width: min(360px, calc(100vw - 24px));
+      max-height: 380px;
+      overflow: auto;
+      display: none;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      box-shadow: 0 18px 45px rgba(15,42,68,.16);
+      padding: 8px;
+      z-index: 2000;
+    }
+
+    .notification-panel.show {
+      display: block;
+      animation: notificationPanelIn .18s ease;
+    }
+
+    @keyframes notificationPanelIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .notification-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 8px 9px;
+      border-bottom: 1px solid #edf1f5;
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .notification-clear {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 8px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .notification-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      width: 100%;
+      padding: 10px 8px;
+      margin-top: 5px;
+      border: 1px solid #edf1f5;
+      border-radius: 10px;
+      background: #fafcfe;
+      text-align: right;
+      cursor: pointer;
+    }
+
+    .notification-item:hover {
+      background: #f4f8fb;
+      border-color: #dce6ef;
+    }
+
+    .notification-item-icon {
+      width: 29px;
+      height: 29px;
+      flex: 0 0 29px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: #edf4f9;
+      color: var(--primary);
+    }
+
+    .notification-item-title {
+      color: var(--primary);
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .notification-item-text {
+      margin-top: 2px;
+      color: #6d7b8b;
+      font-size: 9px;
+      line-height: 1.5;
+    }
+
+    .notification-empty {
+      padding: 22px 10px;
+      text-align: center;
+      color: #98a4b1;
+      font-size: 10px;
+    }
+
     .header-button {
       height: 38px;
 
@@ -872,7 +1062,7 @@
 
       gap: 13px;
 
-      align-items: start;
+      align-items: stretch;
     }
 
     /* =========================================================
@@ -881,6 +1071,15 @@
 
     .case-card {
       position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      /* All case cards are equalized by JavaScript after rendering. */
+      min-height: 0;
+
+      display: flex;
+      flex-direction: column;
 
       background: var(--card);
 
@@ -1035,10 +1234,17 @@
 
     .case-country {
       margin-top: 4px;
-
       font-size: 9px;
-
       opacity: .76;
+    }
+
+    .case-date {
+      margin-top: 4px;
+      font-size: 8px;
+      opacity: .70;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
     /* =========================================================
@@ -1123,6 +1329,15 @@
     .case-body {
       padding:
         10px 13px 12px;
+      flex: 1 1 auto;
+
+      flex: 1 1 auto;
+      min-height: 0;
+
+      display: flex;
+      flex-direction: column;
+
+      overflow: visible;
     }
 
     .fields-grid {
@@ -1165,6 +1380,18 @@
       text-overflow: ellipsis;
     }
 
+.field-item.field-new {
+      border-color: rgba(201,162,39,.45);
+      background: #fffdf5;
+      box-shadow: 0 0 0 1px rgba(201,162,39,.08);
+    }
+
+    .field-new-icon {
+      color: var(--gold);
+      margin-left: 4px;
+      animation: notificationPulse 1.5s 2;
+    }
+
     .field-value {
       color: #344154;
 
@@ -1187,7 +1414,8 @@
 
       gap: 6px;
 
-      margin-top: 8px;
+      margin-top: auto;
+      padding-top: 8px;
     }
 
     .case-button {
@@ -1435,11 +1663,137 @@
 
     .modal-title {
       margin: 0;
-
       color: var(--primary);
-
       font-size: 15px;
       font-weight: 900;
+    }
+
+    .modal-title-wrap {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .modal-country-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-flag {
+      width: 36px;
+      height: 27px;
+      flex: 0 0 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 6px;
+      background: #eef3f7;
+      border: 1px solid #dce5ed;
+      font-size: 20px;
+    }
+
+    .modal-flag img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .modal-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px 12px;
+      margin-top: 4px;
+      color: #7d8997;
+      font-size: 8px;
+      font-weight: 700;
+    }
+
+    .case-footer {
+      flex: 0 0 auto;
+      min-height: 46px;
+      padding: 8px 13px 9px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-top: 1px solid #edf1f5;
+      background: linear-gradient(180deg, #fbfcfe, #f5f8fb);
+      color: #8793a1;
+      font-size: 8px;
+    }
+
+    .case-footer-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .case-footer-left i {
+      color: var(--gold);
+    }
+
+    .case-footer-signature {
+      flex: 0 0 auto;
+      text-align: right;
+      line-height: 1.25;
+    }
+
+    .case-footer-signature strong {
+      color: var(--primary);
+      letter-spacing: .8px;
+    }
+
+    .case-signature {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed #dfe6ed;
+      text-align: center;
+      color: #8793a1;
+      font-size: 9px;
+      line-height: 1.5;
+      flex: 0 0 auto;
+    }
+
+    .case-signature strong {
+      color: var(--primary);
+      letter-spacing: .8px;
+    }
+
+    .case-card.new-case {
+      border-color: #d6b64d;
+      box-shadow: 0 0 0 2px rgba(201,162,39,.10), var(--shadow);
+      animation: cardAppear .45s ease both, newCaseGlow 2.2s ease 2;
+    }
+
+    .new-case-badge {
+      position: absolute;
+      top: 9px;
+      left: 9px;
+      z-index: 5;
+      padding: 3px 7px;
+      border-radius: 20px;
+      background: var(--gold);
+      color: #fff;
+      font-size: 7px;
+      font-weight: 900;
+      box-shadow: 0 4px 10px rgba(0,0,0,.12);
+      animation: newBadgePulse 1.3s ease-in-out 3;
+    }
+
+    @keyframes newCaseGlow {
+      0%, 100% { box-shadow: 0 0 0 2px rgba(201,162,39,.10), var(--shadow); }
+      50% { box-shadow: 0 0 0 5px rgba(201,162,39,.18), 0 12px 30px rgba(201,162,39,.15); }
+    }
+
+    @keyframes newBadgePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
     }
 
     .modal-close {
@@ -1462,6 +1816,36 @@
 
     .modal-content {
       padding: 17px;
+    }
+
+    .modal-section-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 9px;
+      color: var(--primary);
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .modal-section-title i {
+      color: var(--gold);
+    }
+
+    .modal-empty {
+      padding: 28px 10px;
+      text-align: center;
+      color: #8793a1;
+    }
+
+    .modal-empty i {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .modal-empty p {
+      margin: 0;
+      font-size: 10px;
     }
 
     .modal-grid {
@@ -1619,6 +2003,11 @@
         display: none;
       }
 
+      .notification-panel {
+        left: auto;
+        right: 0;
+      }
+
       .dashboard-container {
         padding:
           12px 12px 25px;
@@ -1682,6 +2071,12 @@
 
       .case-header {
         min-height: 64px;
+      }
+
+      .case-card {
+        height: 470px;
+        min-height: 470px;
+        max-height: 470px;
       }
 
       .fields-grid {
@@ -1800,6 +2195,21 @@
   <section id="loginPage">
 
     <div class="login-card">
+
+      <div class="login-visual-strip" aria-hidden="true">
+        <div class="login-visual migration">
+          <i class="fa-solid fa-person-walking-luggage"></i>
+          <span>Migration</span>
+        </div>
+        <div class="login-visual humanitarian">
+          <i class="fa-solid fa-hands-holding-child"></i>
+          <span>Humanitarian</span>
+        </div>
+        <div class="login-visual travel">
+          <i class="fa-solid fa-plane-departure"></i>
+          <span>Travel</span>
+        </div>
+      </div>
 
       <img
         src="logo.png"
@@ -1931,6 +2341,30 @@
 
 
         <div class="header-actions">
+
+          <div class="notification-wrap">
+            <button
+              id="notificationButton"
+              class="header-button notification-button"
+              type="button"
+              aria-label="Notifications"
+              aria-expanded="false"
+              onclick="toggleNotifications(event)"
+            >
+              <i class="fa-solid fa-bell"></i>
+              <span id="notificationBadge" class="notification-badge">0</span>
+            </button>
+
+            <div id="notificationPanel" class="notification-panel">
+              <div class="notification-head">
+                <span><i class="fa-solid fa-bell"></i> Notifications</span>
+                <button class="notification-clear" type="button" onclick="clearNotifications(event)">Mark as seen</button>
+              </div>
+              <div id="notificationList">
+                <div class="notification-empty">No new notifications.</div>
+              </div>
+            </div>
+          </div>
 
           <button
             class="header-button"
@@ -2156,12 +2590,18 @@
 
       <div class="modal-header">
 
-        <h3
-          id="modalTitle"
-          class="modal-title"
-        >
-          Case Details
-        </h3>
+        <div class="modal-title-wrap">
+          <div class="modal-country-line">
+            <div id="modalFlag" class="modal-flag">🏳️</div>
+            <h3
+              id="modalTitle"
+              class="modal-title"
+            >
+              Case Details
+            </h3>
+          </div>
+          <div id="modalMeta" class="modal-meta"></div>
+        </div>
 
         <button
           class="modal-close"
@@ -2202,11 +2642,282 @@
 
     let currentUser = null;
     let currentCases = [];
+    let notificationItems = [];
+    let isInitialCaseLoad = true;
+    let notificationRefreshTimer = null;
+    let newCaseAnimationIds = new Set();
+
+    const NOTIFICATION_STORAGE_KEY = "vim_case_notifications_v2";
+    const CASE_POLL_INTERVAL = 60 * 1000;
+
+    /* =========================================================
+       AUTO LOGOUT AFTER 5 MINUTES OF INACTIVITY
+       ========================================================= */
+
+    const INACTIVITY_LIMIT = 5 * 60 * 1000;
+    let inactivityTimer = null;
+
+    function resetInactivityTimer() {
+
+      if (!currentUser) {
+        return;
+      }
+
+      clearTimeout(inactivityTimer);
+
+      inactivityTimer = setTimeout(function() {
+
+        if (!currentUser) {
+          return;
+        }
+
+        showToast(
+          "You have been logged out after 5 minutes of inactivity.",
+          "error"
+        );
+
+        logout();
+
+      }, INACTIVITY_LIMIT);
+
+    }
+
+    [
+      "mousemove",
+      "mousedown",
+      "keydown",
+      "touchstart",
+      "scroll",
+      "click"
+    ].forEach(function(eventName) {
+
+      document.addEventListener(
+        eventName,
+        function() {
+          resetInactivityTimer();
+        },
+        { passive: true }
+      );
+
+    });
+
+
+    /* =========================================================
+       NOTIFICATIONS / NEW CASE DATA
+       ========================================================= */
+
+    function getNotificationStorageKey() {
+      const passport = getUserValue(currentUser, [
+        "passport",
+        "Passport",
+        "Passport Number",
+        "passportNumber",
+        "شماره پاسپورت"
+      ]) || "guest";
+      return NOTIFICATION_STORAGE_KEY + "::" + String(passport).trim().toLowerCase();
+    }
+
+    function getStoredCaseSnapshot() {
+      try {
+        return JSON.parse(localStorage.getItem(getNotificationStorageKey()) || "{}");
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function saveCaseSnapshot(cases) {
+      const snapshot = {};
+      (cases || []).forEach(function(caseData, index) {
+        const id = getCaseIdentity(caseData, index);
+        const values = {};
+        Object.keys(caseData || {}).forEach(function(key) {
+          const value = caseData[key];
+          if (value !== null && value !== undefined && String(value).trim() !== "") {
+            values[key] = String(value).trim();
+          }
+        });
+        snapshot[id] = values;
+      });
+      try {
+        localStorage.setItem(getNotificationStorageKey(), JSON.stringify(snapshot));
+      } catch (error) {}
+    }
+
+    function getCaseIdentity(caseData, index) {
+      return String(
+        getValue(caseData, [
+          "Case Number", "case number", "Case No", "Case ID", "case_id",
+          "شماره پرونده", "نمبر پرونده"
+        ]) ||
+        (getValue(caseData, ["Country", "country", "کشور"]) || "case") + "::" + index
+      ).trim();
+    }
+
+    function compareForNewData(oldCases, newCases) {
+      const oldMap = oldCases || {};
+      const found = [];
+
+      (newCases || []).forEach(function(caseData, index) {
+        const id = getCaseIdentity(caseData, index);
+        const oldValues = oldMap[id] || null;
+        const country = getValue(caseData, ["Country", "country", "کشور"]) || "";
+        const title = String(country).trim() || getValue(caseData, ["Case Title", "case title", "Title", "Visa Type", "visa type", "نوع ویزا", "عنوان پرونده"]) || "Case";
+
+        if (!oldValues) {
+          if (!isInitialCaseLoad) {
+            found.push({ id: id + "::case", caseId: id, title: String(title), field: "New Case", message: "A new case has been added." });
+          }
+          return;
+        }
+
+        Object.keys(caseData || {}).forEach(function(key) {
+          const value = caseData[key];
+          if (value === null || value === undefined || String(value).trim() === "") return;
+          const text = String(value).trim();
+          if (!Object.prototype.hasOwnProperty.call(oldValues, key) || oldValues[key] !== text) {
+            const uniqueId = id + "::" + normalizeText(key) + "::" + text;
+            const isNewField = !Object.prototype.hasOwnProperty.call(oldValues, key);
+            found.push({
+              id: uniqueId,
+              caseId: id,
+              title: String(title),
+              field: key,
+              message: (isNewField ? "New information: " : "Updated information: ") + text
+            });
+          }
+        });
+      });
+
+      return found;
+    }
+
+    function getSeenNotificationIds() {
+      try {
+        return JSON.parse(localStorage.getItem(getNotificationStorageKey() + "::seen") || "[]");
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveSeenNotificationIds(ids) {
+      try {
+        localStorage.setItem(getNotificationStorageKey() + "::seen", JSON.stringify(Array.from(new Set(ids)).slice(-300)));
+      } catch (error) {}
+    }
+
+    function addNewNotifications(items) {
+      if (!items.length) return;
+      const seen = new Set(getSeenNotificationIds());
+      const existing = new Set(notificationItems.map(function(item) { return item.id; }));
+      items.forEach(function(item) {
+        if (!seen.has(item.id) && !existing.has(item.id)) {
+          notificationItems.unshift(item);
+          newCaseAnimationIds.add(item.caseId);
+        }
+      });
+      notificationItems = notificationItems.slice(0, 50);
+      renderNotifications();
+    }
+
+    function renderNotifications() {
+      const list = document.getElementById("notificationList");
+      const badge = document.getElementById("notificationBadge");
+      if (!list || !badge) return;
+
+      const unseen = notificationItems.filter(function(item) {
+        return !getSeenNotificationIds().includes(item.id);
+      });
+      badge.textContent = unseen.length > 99 ? "99+" : String(unseen.length);
+      badge.classList.toggle("show", unseen.length > 0);
+
+      if (!unseen.length) {
+        list.innerHTML = '<div class="notification-empty"><i class="fa-regular fa-circle-check"></i><br>No new notifications.</div>';
+        return;
+      }
+
+      list.innerHTML = unseen.map(function(item, index) {
+        return '<button type="button" class="notification-item" onclick="openNotification(' + index + ')">' +
+          '<div class="notification-item-icon"><i class="fa-solid fa-circle-info"></i></div>' +
+          '<div><div class="notification-item-title"><i class="fa-solid fa-flag"></i> ' + escapeHtml(item.title) + '</div>' +
+          '<div class="notification-item-text"><strong>' + escapeHtml(item.field) + '</strong> — ' + escapeHtml(item.message) + '</div></div>' +
+          '</button>';
+      }).join("");
+    }
+
+    function toggleNotifications(event) {
+      if (event) event.stopPropagation();
+      const panel = document.getElementById("notificationPanel");
+      const button = document.getElementById("notificationButton");
+      if (!panel) return;
+      const show = !panel.classList.contains("show");
+      panel.classList.toggle("show", show);
+      if (button) button.setAttribute("aria-expanded", show ? "true" : "false");
+    }
+
+    function clearNotifications(event) {
+      if (event) event.stopPropagation();
+      const ids = notificationItems.map(function(item) { return item.id; });
+      saveSeenNotificationIds(getSeenNotificationIds().concat(ids));
+      notificationItems = [];
+      renderNotifications();
+      renderCases();
+    }
+
+    function openNotification(index) {
+      const unseen = notificationItems.filter(function(item) {
+        return !getSeenNotificationIds().includes(item.id);
+      });
+      const item = unseen[index];
+      if (!item) return;
+      saveSeenNotificationIds(getSeenNotificationIds().concat([item.id]));
+      const caseData = currentCases.find(function(c, i) { return getCaseIdentity(c, i) === item.caseId; });
+      if (caseData) openCaseModal(caseData);
+      renderNotifications();
+    }
+
+    function initializeCaseNotifications(cases) {
+      const stored = getStoredCaseSnapshot();
+      if (!Object.keys(stored).length) {
+        saveCaseSnapshot(cases);
+        isInitialCaseLoad = false;
+        renderNotifications();
+        return;
+      }
+      isInitialCaseLoad = false;
+      const newItems = compareForNewData(stored, cases);
+      addNewNotifications(newItems);
+      saveCaseSnapshot(cases);
+      if (newItems.length) renderCases();
+    }
+
+    function startCasePolling() {
+      clearInterval(notificationRefreshTimer);
+      notificationRefreshTimer = setInterval(function() {
+        if (currentUser) refreshCases(true);
+      }, CASE_POLL_INTERVAL);
+    }
+
+    document.addEventListener("click", function(event) {
+      const wrap = event.target.closest ? event.target.closest(".notification-wrap") : null;
+      if (!wrap) {
+        const panel = document.getElementById("notificationPanel");
+        const button = document.getElementById("notificationButton");
+        if (panel) panel.classList.remove("show");
+        if (button) button.setAttribute("aria-expanded", "false");
+      }
+    });
 
 
     /* =========================================================
        INIT
        ========================================================= */
+
+    window.addEventListener("resize", function() {
+      if (currentUser) {
+        scheduleCardHeightSync();
+      }
+    });
+
 
     document.addEventListener("DOMContentLoaded", function() {
 
@@ -2328,8 +3039,12 @@
             ? data.cases
             : [];
 
+        sessionStorage.setItem("vim_password", password);
 
+        isInitialCaseLoad = true;
+        notificationItems = [];
         showDashboard();
+        startCasePolling();
 
 
       } catch (error) {
@@ -2370,6 +3085,8 @@
 
     function showDashboard() {
 
+      resetInactivityTimer();
+
       document
         .getElementById("loginPage")
         .style.display = "none";
@@ -2393,19 +3110,21 @@
         );
 
 
-      const name =
-        getUserValue(
-          currentUser,
-          [
-            "name",
-            "Name",
-            "Full Name",
-            "fullName",
-            "نام",
-            "نام کامل"
-          ]
-        );
+      const welcomeCase =
+        currentCases.length ? currentCases[0] : {};
 
+      const firstName = getValue(welcomeCase, [
+        "_A", "A", "First Name", "first name", "نام", "Name"
+      ]);
+
+      const lastName = getValue(welcomeCase, [
+        "_B", "B", "Last Name", "last name", "تخلص", "نام خانوادگی", "Surname"
+      ]);
+
+      const name = [firstName, lastName]
+        .map(function(value) { return String(value || "").trim(); })
+        .filter(Boolean)
+        .join(" ");
 
       document
         .getElementById("welcomeName")
@@ -2422,8 +3141,9 @@
 
 
       renderStats();
-
       renderCases();
+      initializeCaseNotifications(currentCases);
+      renderNotifications();
 
     }
 
@@ -2551,12 +3271,76 @@
         }
       );
 
+      scheduleCardHeightSync();
+
+      // The new-item animation is intentionally shown only once per new update.
+      if (newCaseAnimationIds.size) {
+        setTimeout(function() {
+          newCaseAnimationIds.clear();
+        }, 2600);
+      }
+
+    }
+
+
+    /* =========================================================
+       EQUAL CARD HEIGHTS / NO INTERNAL CARD SCROLL
+       ========================================================= */
+
+    function equalizeCaseCardHeights() {
+
+      const cards = Array.from(
+        document.querySelectorAll("#casesGrid .case-card")
+      );
+
+      if (!cards.length) {
+        return;
+      }
+
+      cards.forEach(function(card) {
+        card.style.height = "auto";
+      });
+
+      let maxHeight = 0;
+
+      cards.forEach(function(card) {
+        maxHeight = Math.max(
+          maxHeight,
+          Math.ceil(card.getBoundingClientRect().height)
+        );
+      });
+
+      cards.forEach(function(card) {
+        card.style.height = maxHeight + "px";
+      });
+
+    }
+
+
+    function scheduleCardHeightSync() {
+      requestAnimationFrame(function() {
+        equalizeCaseCardHeights();
+        requestAnimationFrame(equalizeCaseCardHeights);
+      });
     }
 
 
     /* =========================================================
        CREATE CASE CARD
        ========================================================= */
+
+    function getDateAppliedValue(caseData) {
+      const direct = getValue(caseData, [
+        "Date Applied", "date applied", "DateApplied", "تاریخ درخواست"
+      ]);
+      if (direct !== null && direct !== undefined && String(direct).trim() !== "") {
+        return String(direct).trim();
+      }
+
+      // Column H in the Cases sheet is Date Applied.
+      const hValue = getValue(caseData, ["_H", "H"]);
+      return hValue !== null && hValue !== undefined ? String(hValue).trim() : "";
+    }
 
     function createCaseCard(caseData, index) {
 
@@ -2603,20 +3387,53 @@
 
 
       /*
-        Country detection:
-        First look for a dedicated country column.
-        If not found, inspect the case data for country names.
+        IMPORTANT:
+        The card title and flag are driven by the Country column from
+        the Cases sheet. We do not guess a country from unrelated fields.
       */
 
       const country =
-        findCountry(
+        getValue(
           caseData,
-          title
+          [
+            "Country",
+            "country",
+            "کشور"
+          ]
         );
+
+      const countryName =
+        country !== null && country !== undefined
+          ? String(country).trim()
+          : "";
+
+      /*
+        When Country is present, it is the exact card title.
+        When Country is empty, preserve the existing case title so the
+        card remains usable without changing the project's structure.
+      */
+      const cardTitle =
+        countryName ||
+        "—";
 
 
       const flag =
-        getCountryFlag(country);
+        getCountryFlag(countryName);
+
+      const dateApplied = getDateAppliedValue(caseData);
+
+      const caseIdentity = getCaseIdentity(caseData, index);
+      const seenIds = getSeenNotificationIds();
+      const cardHasNew = notificationItems.some(function(item) {
+        return item.caseId === caseIdentity && !seenIds.includes(item.id);
+      });
+
+      const cardShouldAnimate =
+        cardHasNew && newCaseAnimationIds.has(caseIdentity);
+
+      if (cardShouldAnimate) {
+        card.classList.add("new-case");
+      }
 
 
       const progress =
@@ -2628,8 +3445,8 @@
 
 
       const countryDisplay =
-        country
-          ? escapeHtml(country)
+        countryName
+          ? escapeHtml(countryName)
           : "";
 
 
@@ -2653,11 +3470,18 @@
             ${fields
               .map(function(field) {
 
+                const fieldIsNew = notificationItems.some(function(item) {
+                  return item.caseId === caseIdentity &&
+                    !seenIds.includes(item.id) &&
+                    normalizeText(item.field) === normalizeText(field.key);
+                });
+
                 return `
 
-                  <div class="field-item">
+                  <div class="field-item ${fieldIsNew ? "field-new" : ""}">
 
                     <div class="field-label">
+                      ${fieldIsNew ? '<i class="fa-solid fa-bell field-new-icon"></i>' : ""}
                       ${escapeHtml(field.key)}
                     </div>
 
@@ -2750,9 +3574,11 @@
 
       card.innerHTML = `
 
-        <div class="case-header">
+         <div class="case-header">
 
-          <div class="case-header-top">
+           ${cardHasNew ? '<div class="new-case-badge"><i class="fa-solid fa-sparkles"></i> New</div>' : ""}
+
+           <div class="case-header-top">
 
             <div class="country-flag">
 
@@ -2761,7 +3587,7 @@
                   ? `
                     <img
                       src="${flag.image}"
-                      alt="${escapeAttribute(country || "Country")}"
+                      alt="${escapeAttribute(countryName || "Country")}"
                       loading="lazy"
                       onerror="this.style.display='none'; this.parentElement.textContent='${flag.emoji}'"
                     >
@@ -2778,19 +3604,18 @@
                 ${escapeHtml(caseNumber)}
               </div>
 
-              <h3 class="case-title">
-                ${escapeHtml(title)}
-              </h3>
+               <h3 class="case-title">
+                 ${escapeHtml(cardTitle)}
+               </h3>
 
-              ${
-                countryDisplay
-                  ? `
-                    <div class="case-country">
-                      ${countryDisplay}
-                    </div>
-                  `
-                  : ""
-              }
+               <div class="case-country">
+                 ${countryDisplay || "—"}
+               </div>
+
+               <div class="case-date">
+                 <i class="fa-regular fa-calendar"></i>
+                 Date Applied: ${escapeHtml(String(dateApplied || "-"))}
+               </div>
 
             </div>
 
@@ -2861,6 +3686,16 @@
 
           </div>
 
+        </div>
+
+        <div class="case-footer">
+          <div class="case-footer-left" title="${escapeAttribute(countryName || "Country not specified")}">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>${escapeHtml(countryName || "Country not specified")}</span>
+          </div>
+          <div class="case-footer-signature">
+            با احترام<br><strong>VIM</strong>
+          </div>
         </div>
 
       `;
@@ -3614,6 +4449,24 @@
 
 
       /*
+        If the Country column contains a localized country name,
+        resolve it to the canonical country name used by the flag map.
+        This does NOT change the text displayed as the card title.
+      */
+      const canonicalCountry =
+        detectCountryFromText(country);
+
+      if (canonicalCountry) {
+        const canonicalName =
+          normalizeText(canonicalCountry);
+
+        if (flags[canonicalName]) {
+          return flags[canonicalName];
+        }
+      }
+
+
+      /*
         Alias matching.
       */
 
@@ -4034,7 +4887,11 @@
         "passport",
         "passport number",
 
-        "password"
+        "password",
+        "_row",
+        "_a",
+        "_b",
+        "_h"
 
       ].map(normalizeText));
 
@@ -4134,147 +4991,69 @@
 
     function openCaseModal(caseData) {
 
-      const title =
-        getValue(
-          caseData,
-          [
-            "Case Title",
-            "case title",
-            "Title",
-            "Visa Type",
-            "visa type",
-            "نوع ویزا",
-            "عنوان پرونده"
-          ]
-        ) ||
-        "Case Details";
+      const countryValue =
+        getValue(caseData, ["Country", "country", "کشور"]);
+      const countryName = String(countryValue || "").trim();
+      const title = countryName ||
+        getValue(caseData, [
+          "Case Title", "case title", "Title", "Visa Type", "visa type",
+          "نوع ویزا", "عنوان پرونده"
+        ]) || "Case Details";
+      const flag = getCountryFlag(countryName);
+      const caseNumber = getValue(caseData, [
+        "Case Number", "case number", "Case No", "Case ID", "case_id",
+        "شماره پرونده", "نمبر پرونده"
+      ]) || "-";
+      const dateApplied = getDateAppliedValue(caseData) || "-";
 
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalMeta").innerHTML =
+        '<span><i class="fa-regular fa-calendar"></i> Date Applied: ' + escapeHtml(String(dateApplied)) + '</span>' +
+        '<span><i class="fa-solid fa-folder"></i> ' + escapeHtml(String(caseNumber)) + '</span>';
 
-      document
-        .getElementById("modalTitle")
-        .textContent =
-          title;
+      const modalFlag = document.getElementById("modalFlag");
+      modalFlag.innerHTML = flag.image
+        ? '<img src="' + escapeAttribute(flag.image) + '" alt="' + escapeAttribute(countryName || "Country") + '" onerror="this.style.display=\'none\';this.parentElement.textContent=\'' + flag.emoji + '\'">'
+        : flag.emoji;
 
+      const fields = Object.keys(caseData || {})
+        .map(function(key) { return { key: key, value: caseData[key] }; })
+        .filter(function(item) {
+          return item.value !== null && item.value !== undefined && String(item.value).trim() !== "" &&
+            !["_row", "_a", "_b", "_h"].includes(normalizeText(item.key)) &&
+            !(normalizeText(item.key).includes("password") && normalizeText(item.key) !== "passport");
+        });
 
-      const fields =
-        Object.keys(caseData || {})
-          .map(function(key) {
-
-            return {
-              key: key,
-              value: caseData[key]
-            };
-
-          })
-          .filter(function(item) {
-
-            return (
-              item.value !== null &&
-              item.value !== undefined &&
-              String(item.value).trim() !== "" &&
-              !(
-                normalizeText(item.key)
-                  .includes("password") &&
-                normalizeText(item.key) !== "passport"
-              )
-            );
-
-          });
-
-
-      const content =
-        document.getElementById(
-          "modalContent"
-        );
-
+      const content = document.getElementById("modalContent");
 
       if (!fields.length) {
-
-        content.innerHTML =
-          "<p>No information available.</p>";
-
+        content.innerHTML = '<div class="modal-empty"><i class="fa-regular fa-folder-open"></i><p>No information available.</p></div>';
       } else {
-
-        content.innerHTML = `
-
-          <div class="modal-grid">
-
-            ${fields
-              .map(function(item) {
-
-                const url =
-                  extractUrl(item.value);
-
-
-                if (url) {
-
-                  return `
-
-                    <div class="modal-field">
-
-                      <div class="modal-field-label">
-                        ${escapeHtml(item.key)}
-                      </div>
-
-                      <div class="modal-field-value">
-
-                        <a
-                          class="case-button external"
-                          href="${escapeAttribute(url)}"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-
-                          <i class="fa-solid fa-arrow-up-right-from-square"></i>
-
-                          ${escapeHtml(item.key)}
-
-                        </a>
-
-                      </div>
-
-                    </div>
-
-                  `;
-
-                }
-
-
-                return `
-
-                  <div class="modal-field">
-
-                    <div class="modal-field-label">
-                      ${escapeHtml(item.key)}
-                    </div>
-
-                    <div class="modal-field-value">
-                      ${formatValue(item.value)}
-                    </div>
-
-                  </div>
-
-                `;
-
-              })
-              .join("")
+        content.innerHTML =
+          '<div class="modal-section-title"><i class="fa-solid fa-table-list"></i> Case Information</div>' +
+          '<div class="modal-grid">' + fields.map(function(item) {
+            const url = extractUrl(item.value);
+            if (url) {
+              return '<div class="modal-field"><div class="modal-field-label">' + escapeHtml(item.key) +
+                '</div><div class="modal-field-value"><a class="case-button external" href="' + escapeAttribute(url) +
+                '" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> ' +
+                escapeHtml(item.key) + '</a></div></div>';
             }
-
-          </div>
-
-        `;
-
+            return '<div class="modal-field"><div class="modal-field-label">' + escapeHtml(item.key) +
+              '</div><div class="modal-field-value">' + formatValue(item.value) + '</div></div>';
+          }).join("") + '</div>' +
+          '<div class="case-signature">با احترام<br><strong>VIM</strong></div>';
       }
 
+      const identity = getCaseIdentity(caseData, currentCases.indexOf(caseData));
+      const idsToMark = notificationItems.filter(function(item) { return item.caseId === identity; }).map(function(item) { return item.id; });
+      if (idsToMark.length) saveSeenNotificationIds(getSeenNotificationIds().concat(idsToMark));
+      notificationItems = notificationItems.filter(function(item) { return item.caseId !== identity; });
+      renderNotifications();
+      renderCases();
 
-      document
-        .getElementById("caseModal")
-        .classList.add("show");
-
-
-      document.body.style.overflow =
-        "hidden";
-
+      document.getElementById("caseModal").classList.add("show");
+      document.body.style.overflow = "hidden";
     }
 
 
@@ -4324,104 +5103,49 @@
        REFRESH
        ========================================================= */
 
-    async function refreshCases() {
+    async function refreshCases(silent) {
 
-      if (!currentUser) {
-        return;
-      }
+      if (!currentUser) return;
 
+      const passport = getUserValue(currentUser, [
+        "passport", "Passport", "Passport Number", "passportNumber", "شماره پاسپورت"
+      ]);
+      if (!passport) return;
 
-      const passport =
-        getUserValue(
-          currentUser,
-          [
-            "passport",
-            "Passport",
-            "Passport Number",
-            "passportNumber",
-            "شماره پاسپورت"
-          ]
-        );
-
-
-      if (!passport) {
-        return;
-      }
-
-
-      showToast(
-        "Refreshing...",
-        "success"
-      );
-
+      if (!silent) showToast("Refreshing...", "success");
 
       try {
-
-        const url =
-          API_URL +
+        const url = API_URL +
           "?action=login" +
-          "&passport=" +
-          encodeURIComponent(passport) +
-          "&password=" +
-          encodeURIComponent(
-            sessionStorage.getItem(
-              "vim_password"
-            ) || ""
-          );
+          "&passport=" + encodeURIComponent(passport) +
+          "&password=" + encodeURIComponent(sessionStorage.getItem("vim_password") || "");
 
+        const response = await fetch(url, { method: "GET", cache: "no-store" });
+        const data = await response.json();
 
-        const response =
-          await fetch(
-            url,
-            {
-              method: "GET",
-              cache: "no-store"
-            }
-          );
-
-
-        const data =
-          await response.json();
-
-
-        if (
-          data &&
-          data.success === true
-        ) {
-
-          currentUser =
-            data.user || currentUser;
-
-
-          currentCases =
-            Array.isArray(data.cases)
-              ? data.cases
-              : [];
-
-
+        if (data && data.success === true) {
+          const oldSnapshot = getStoredCaseSnapshot();
+          currentUser = data.user || currentUser;
+          const nextCases = Array.isArray(data.cases) ? data.cases : [];
+          const newItems = Object.keys(oldSnapshot).length && !isInitialCaseLoad
+            ? compareForNewData(oldSnapshot, nextCases)
+            : [];
+          currentCases = nextCases;
+          if (newItems.length) {
+            addNewNotifications(newItems);
+            showToast("New case information received.", "success");
+          }
+          saveCaseSnapshot(currentCases);
+          isInitialCaseLoad = false;
           renderStats();
-
           renderCases();
-
-
-          showToast(
-            "Cases updated.",
-            "success"
-          );
-
+          renderNotifications();
+          if (!silent) showToast("Cases updated.", "success");
         }
-
       } catch (error) {
-
         console.error(error);
-
-        showToast(
-          "Unable to refresh cases.",
-          "error"
-        );
-
+        if (!silent) showToast("Unable to refresh cases.", "error");
       }
-
     }
 
 
@@ -4431,9 +5155,18 @@
 
     function logout() {
 
+      clearTimeout(inactivityTimer);
+      inactivityTimer = null;
+      clearInterval(notificationRefreshTimer);
+      notificationRefreshTimer = null;
+
       currentUser = null;
 
       currentCases = [];
+      notificationItems = [];
+      newCaseAnimationIds.clear();
+      isInitialCaseLoad = true;
+      renderNotifications();
 
 
       sessionStorage.removeItem(
