@@ -684,6 +684,38 @@
       gap: 8px;
     }
 
+    .mobile-social-actions {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      direction: ltr;
+    }
+
+    .mobile-social-btn {
+      width: 35px;
+      height: 35px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: 0 4px 12px rgba(15,42,68,.12);
+      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+
+    .mobile-social-btn:hover,
+    .mobile-social-btn:focus-visible {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 7px 16px rgba(15,42,68,.18);
+    }
+
+    .mobile-social-btn.facebook { background: #1877f2; }
+    .mobile-social-btn.instagram { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
+    .mobile-social-btn.whatsapp { background: #16a34a; }
+
     .notification-wrap {
       position: relative;
     }
@@ -1964,6 +1996,22 @@
 
     @media (max-width: 700px) {
 
+      .mobile-social-actions {
+        display: flex;
+        flex: 0 0 auto;
+      }
+
+      .mobile-social-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        font-size: 14px;
+      }
+
+      .header-actions {
+        gap: 5px;
+      }
+
       body {
         font-size: 13px;
       }
@@ -2152,6 +2200,176 @@
 
       .case-button {
         width: 100%;
+      }
+    }
+
+    /* =========================================================
+       VIM APP-LIKE LOGIN / MOBILE SOCIAL HEADER / CASE CATEGORIES
+       ========================================================= */
+
+    #loginPage {
+      min-height: 100svh;
+    }
+
+    .login-card {
+      max-width: 430px;
+      border-radius: 28px;
+      padding: 30px 28px 24px;
+      box-shadow: 0 28px 80px rgba(0,0,0,.34);
+    }
+
+    .login-title {
+      letter-spacing: 2px;
+    }
+
+    .login-subtitle {
+      font-weight: 800;
+      letter-spacing: .8px;
+    }
+
+    .login-button {
+      min-height: 50px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(23,63,103,.20);
+    }
+
+    .form-input {
+      min-height: 50px;
+      border-radius: 13px;
+      font-size: 13px;
+      background: #f8fafc;
+    }
+
+    .form-label {
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .login-footer {
+      margin-top: 18px;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .case-category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .case-category-card {
+      background: #fff;
+      border: 1px solid #dfe7ee;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 5px 18px rgba(18,50,76,.05);
+    }
+
+    .case-category-card.full {
+      grid-column: 1 / -1;
+    }
+
+    .case-category-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 12px;
+      background: linear-gradient(135deg,#f5f8fb,#eef4f8);
+      border-bottom: 1px solid #e4ebf1;
+      color: var(--primary);
+    }
+
+    .case-category-icon {
+      width: 31px;
+      height: 31px;
+      flex: 0 0 31px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9px;
+      background: #fff;
+      color: var(--gold);
+      border: 1px solid #e1e7ed;
+    }
+
+    .case-category-head h4 {
+      margin: 0;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .case-category-head small {
+      display: block;
+      margin-top: 2px;
+      color: #81909e;
+      font-size: 8px;
+    }
+
+    .organization-logo {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      border-radius: 7px;
+      background: #fff;
+      border: 1px solid #e1e7ed;
+      padding: 3px;
+      margin-inline-start: auto;
+    }
+
+    .case-category-body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 7px;
+      padding: 10px;
+    }
+
+    .category-field {
+      min-width: 0;
+      padding: 8px 9px;
+      border: 1px solid #edf1f5;
+      border-radius: 9px;
+      background: #fafcfe;
+    }
+
+    .category-field-label {
+      margin-bottom: 3px;
+      color: #677789;
+      font-size: 8px;
+      font-weight: 900;
+    }
+
+    .category-field-value {
+      color: #26384b;
+      font-size: 9px;
+      font-weight: 650;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .category-empty {
+      padding: 12px;
+      color: #8b98a6;
+      font-size: 9px;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .case-category-grid { grid-template-columns: 1fr; }
+      .case-category-card.full { grid-column: auto; }
+      .case-category-body { grid-template-columns: 1fr; }
+      .login-card {
+        width: min(100%, 430px);
+        padding: 24px 19px 20px;
+        border-radius: 24px;
+      }
+      .login-visual { min-height: 58px; }
+      .login-logo { width: 88px; height: 88px; }
+      .mobile-social-actions {
+        position: relative;
+        z-index: 3;
       }
     }
 
@@ -3036,6 +3254,11 @@
       font-weight: 900;
     }
 
+    /* Country is displayed only once in the official identity row below. */
+    #caseModal .modal-header .modal-flag {
+      display: none !important;
+    }
+
     .modal-country-line {
       gap: 10px;
     }
@@ -3072,45 +3295,52 @@
       background: #fff;
     }
 
+    /* Single-line official case identity row: applicant photo + authority logo + country/title + case number */
     .official-case-heading {
       display: grid;
-      grid-template-columns: 72px minmax(0, 1fr) 170px;
-      gap: 16px;
+      grid-template-columns: 82px 74px minmax(0, 1fr) 155px;
+      gap: 14px;
       align-items: center;
-      padding: 20px 0 16px;
+      padding: 16px 0;
       border-bottom: 2px solid #173f67;
     }
 
     .official-case-logo {
-      width: 66px;
-      height: 66px;
+      width: 70px;
+      height: 70px;
       display: flex;
       align-items: center;
       justify-content: center;
       border: 1px solid #d6dde5;
       background: #fff;
-      border-radius: 6px;
+      border-radius: 7px;
+      box-shadow: 0 3px 10px rgba(15,42,68,.06);
     }
 
     .official-case-logo img {
-      width: 50px;
-      height: 50px;
+      width: 52px;
+      height: 52px;
       object-fit: contain;
     }
 
     .official-logo-fallback {
       width: 100%;
       height: 100%;
+      display: flex;
       align-items: center;
       justify-content: center;
       color: #173f67;
       font-size: 28px;
     }
 
+    .official-case-country {
+      min-width: 0;
+    }
+
     .official-country-label {
-      color: #7a8794;
+      color: #c9a227;
       font-size: 9px;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
 
     .official-case-country h2 {
@@ -3118,20 +3348,35 @@
       color: #122d47;
       font-size: 21px;
       font-weight: 900;
-      line-height: 1.3;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .official-country-name {
-      margin-top: 2px;
-      color: #42566b;
-      font-size: 11px;
+      display: none !important;
+    }
+
+    .official-case-title {
+      margin-top: 5px;
+      color: #173f67;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .official-immigration-agency {
-      margin-top: 6px;
-      color: #173f67;
-      font-size: 10px;
-      line-height: 1.5;
+      margin-top: 5px;
+      color: #596b7c;
+      font-size: 9px;
+      line-height: 1.45;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .official-immigration-agency i {
@@ -3140,11 +3385,12 @@
     }
 
     .official-case-number {
-      padding: 11px 12px;
+      padding: 11px 10px;
       border: 1px solid #d9e0e7;
       background: #f8fafc;
-      border-radius: 5px;
+      border-radius: 6px;
       text-align: center;
+      min-width: 0;
     }
 
     .official-case-number span {
@@ -3161,67 +3407,36 @@
       word-break: break-word;
     }
 
-    .applicant-document-header {
-      display: grid;
-      grid-template-columns: 125px minmax(0, 1fr);
-      gap: 20px;
-      align-items: center;
-      padding: 18px 0;
-      border-bottom: 1px solid #dfe5eb;
-    }
-
-    .applicant-document-photo {
-      width: 112px;
-      height: 142px;
+    .official-applicant-photo {
+      width: 82px;
+      height: 104px;
       overflow: hidden;
       border: 1px solid #c7d0da;
       background: #f4f6f8;
-      border-radius: 4px;
+      border-radius: 6px;
       box-shadow: 0 3px 10px rgba(15,42,68,.08);
     }
 
-    .applicant-document-photo img {
+    .official-applicant-photo img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    .applicant-document-photo-fallback {
+    .official-applicant-photo-fallback {
       width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #9aa6b2;
-      font-size: 40px;
+      font-size: 32px;
     }
 
-    .applicant-document-intro {
-      min-width: 0;
-    }
-
-    .document-kicker {
-      color: #c9a227;
-      font-size: 10px;
-      margin-bottom: 5px;
-    }
-
-    .applicant-document-intro h3 {
-      margin: 0;
-      color: #173f67;
-      font-size: 18px;
-      font-weight: 900;
-      line-height: 1.45;
-    }
-
-    .document-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px 18px;
-      margin-top: 9px;
-      color: #697887;
-      font-size: 9px;
+    /* The old second applicant header is intentionally removed from the visual layout. */
+    .applicant-document-header {
+      display: none !important;
     }
 
     .modal-section-title {
@@ -3301,13 +3516,19 @@
       }
 
       .official-case-heading {
-        grid-template-columns: 56px minmax(0, 1fr);
-        gap: 10px;
+        grid-template-columns: 66px 58px minmax(0, 1fr);
+        gap: 9px;
+        align-items: center;
+      }
+
+      .official-applicant-photo {
+        width: 66px;
+        height: 84px;
       }
 
       .official-case-logo {
-        width: 54px;
-        height: 54px;
+        width: 56px;
+        height: 56px;
       }
 
       .official-case-logo img {
@@ -3319,22 +3540,16 @@
         font-size: 16px;
       }
 
+      .official-case-title {
+        font-size: 10px;
+      }
+
+      .official-immigration-agency {
+        font-size: 8px;
+      }
+
       .official-case-number {
         grid-column: 1 / -1;
-      }
-
-      .applicant-document-header {
-        grid-template-columns: 92px minmax(0, 1fr);
-        gap: 12px;
-      }
-
-      .applicant-document-photo {
-        width: 84px;
-        height: 108px;
-      }
-
-      .applicant-document-intro h3 {
-        font-size: 14px;
       }
 
       .modal-grid {
@@ -3426,7 +3641,7 @@
             class="form-label"
             for="passport"
           >
-            Passport Number
+            شماره پاسپورت
           </label>
 
           <div class="input-wrap">
@@ -3438,7 +3653,7 @@
               class="form-input"
               type="text"
               autocomplete="username"
-              placeholder="Enter passport number"
+              placeholder="شماره پاسپورت را وارد کنید"
               required
             >
 
@@ -3453,7 +3668,7 @@
             class="form-label"
             for="password"
           >
-            Password
+            رمز عبور
           </label>
 
           <div class="input-wrap">
@@ -3465,7 +3680,7 @@
               class="form-input"
               type="password"
               autocomplete="current-password"
-              placeholder="Enter password"
+              placeholder="رمز عبور را وارد کنید"
               required
             >
 
@@ -3481,13 +3696,13 @@
         >
           <i class="fa-solid fa-right-to-bracket"></i>
           &nbsp;
-          Login
+          ورود به حساب
         </button>
 
       </form>
 
       <div class="login-footer">
-        VIM Humanitarian Case Management
+        VIM | مدیریت رسمی پرونده‌های بشردوستانه
       </div>
 
     </div>
@@ -3530,6 +3745,18 @@
 
         <div class="header-actions">
 
+          <div class="mobile-social-actions" aria-label="شبکه‌های ارتباطی VIM">
+            <a class="mobile-social-btn facebook" href="https://www.facebook.com/visa.immigration.vim" target="_blank" rel="noopener noreferrer" aria-label="Facebook VIM" title="Facebook VIM">
+              <i class="fa-brands fa-facebook-f"></i>
+            </a>
+            <a class="mobile-social-btn instagram" href="https://www.instagram.com/visa.immigration.vim?utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram VIM" title="Instagram VIM">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a class="mobile-social-btn whatsapp" href="https://wa.me/93780412581" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp VIM" title="WhatsApp VIM">
+              <i class="fa-brands fa-whatsapp"></i>
+            </a>
+          </div>
+
           <div class="notification-wrap">
             <button
               id="notificationButton"
@@ -3560,7 +3787,7 @@
             onclick="refreshCases()"
           >
             <i class="fa-solid fa-rotate"></i>
-            <span>Refresh</span>
+            <span>به‌روزرسانی</span>
           </button>
 
           <button
@@ -3588,11 +3815,11 @@
         <div class="welcome-info">
 
           <h1 id="welcomeName">
-            Welcome
+            متقاضی گرامی
           </h1>
 
-          <p>
-            Your humanitarian case information
+          <p id="welcomeSubtitle">
+            به حساب عمومی پرونده‌های ثبت‌شده بشردوستانه خویش خوش آمدید
           </p>
 
         </div>
@@ -4368,10 +4595,26 @@
         .filter(Boolean)
         .join(" ");
 
+      const gender = String(getValue(welcomeCase, [
+        "Gender", "gender", "جنسیت", "جنس"
+      ]) || "").toLowerCase();
+      const salutation = gender.includes("female") || gender.includes("زن") || gender.includes("مونث") || gender.includes("female")
+        ? "خانم"
+        : gender.includes("male") || gender.includes("مرد") || gender.includes("مذکر")
+          ? "آقای"
+          : "متقاضی گرامی";
+
       document
         .getElementById("welcomeName")
         .textContent =
-          name || "Welcome";
+          name ? salutation + " " + name : "متقاضی گرامی";
+
+      document
+        .getElementById("welcomeSubtitle")
+        .textContent =
+          name
+            ? "متقاضی گرامی " + name + "، به حساب عمومی پرونده‌های ثبت‌شده بشردوستانه خوش آمدید"
+            : "متقاضی گرامی، به حساب عمومی پرونده‌های ثبت‌شده بشردوستانه خوش آمدید";
 
 
       document
@@ -6076,10 +6319,109 @@
        If it cannot load, the country flag remains as a safe fallback.
        ========================================================= */
 
+    const INTERNATIONAL_ORG_PROFILES = [
+      { names: ["unhcr", "un refugee", "کمیساریای عالی سازمان ملل", "پناهندگان سازمان ملل"], name: "کمیساریای عالی سازمان ملل متحد برای پناهندگان (UNHCR)", domain: "unhcr.org" },
+      { names: ["iom", "international organization for migration", "سازمان بین‌المللی مهاجرت"], name: "سازمان بین‌المللی مهاجرت (IOM)", domain: "iom.int" },
+      { names: ["united nations", "un ", "سازمان ملل متحد"], name: "سازمان ملل متحد (UN)", domain: "un.org" },
+      { names: ["icrc", "international committee of the red cross", "کمیته بین‌المللی صلیب سرخ"], name: "کمیته بین‌المللی صلیب سرخ (ICRC)", domain: "icrc.org" },
+      { names: ["ifrc", "international federation of red cross", "فدراسیون بین‌المللی صلیب سرخ"], name: "فدراسیون بین‌المللی جمعیت‌های صلیب سرخ و هلال احمر (IFRC)", domain: "ifrc.org" },
+      { names: ["who", "world health organization", "سازمان جهانی بهداشت"], name: "سازمان جهانی بهداشت (WHO)", domain: "who.int" },
+      { names: ["unicef", "صندوق کودکان سازمان ملل"], name: "صندوق کودکان سازمان ملل متحد (UNICEF)", domain: "unicef.org" },
+      { names: ["wfp", "world food programme", "برنامه جهانی غذا"], name: "برنامه جهانی غذا (WFP)", domain: "wfp.org" },
+      { names: ["undp", "united nations development programme", "برنامه توسعه سازمان ملل"], name: "برنامه توسعه سازمان ملل متحد (UNDP)", domain: "undp.org" },
+      { names: ["european union", "eu ", "اتحادیه اروپا"], name: "اتحادیه اروپا (EU)", domain: "europa.eu" }
+    ];
+
+    function getInternationalOrganizationProfile(text) {
+      const haystack = normalizeText(String(text || ""));
+      if (!haystack) return null;
+      for (let i = 0; i < INTERNATIONAL_ORG_PROFILES.length; i++) {
+        const profile = INTERNATIONAL_ORG_PROFILES[i];
+        if (profile.names.some(function(name) { return haystack.includes(normalizeText(name)); })) return profile;
+      }
+      return null;
+    }
+
+    function getOfficialOrganizationLogo(profile) {
+      if (!profile || !profile.domain) return "";
+      return "https://www.google.com/s2/favicons?domain=" + encodeURIComponent(profile.domain) + "&sz=128";
+    }
+
+    const CASE_FIELD_CATEGORIES = [
+      { id: "personal", title: "معلومات شخصی متقاضی", icon: "fa-user", keys: ["first name","last name","surname","full name","father","mother","date of birth","place of birth","gender","nationality","marital","passport","نام","تخلص","نام خانوادگی","پدر","مادر","تاریخ تولد","محل تولد","جنسیت","ملیت","تأهل","تاهل","پاسپورت"] },
+      { id: "contact", title: "راه‌های ارتباطی با متقاضی", icon: "fa-address-book", keys: ["phone","mobile","whatsapp","email","address","city","province","contact","تلفن","موبایل","واتساپ","ایمیل","آدرس","شهر","ولایت","تماس"] },
+      { id: "requests", title: "درخواست‌های ارسال‌شده به مراجع مربوطه", icon: "fa-paper-plane", keys: ["request","application","submitted","submission","referral","درخواست","اپلیکیشن","درخواستی","ارسال","ارجاع"] },
+      { id: "received-official", title: "مکاتب و پاسخ‌های رسمی دریافت‌شده از مرجع مربوطه", icon: "fa-envelope-open-text", keys: ["official letter","official correspondence","response","decision","notice","letter","correspondence","مکتوب رسمی","نامه رسمی","پاسخ","تصمیم","اعلامیه","مکاتبات"] },
+      { id: "personal-docs", title: "مدارک شخصی متقاضی", icon: "fa-id-card", keys: ["passport","identity","id card","birth certificate","certificate","document","مدرک","اسناد","تذکره","پاسپورت","شناسنامه","سند"] },
+      { id: "authority-docs", title: "مدارک دریافت‌شده از مراجع مربوطه", icon: "fa-building-columns", keys: ["authority document","immigration document","visa","permit","approval","receipt","immigration","مدرک اداره","مدرک مهاجرت","ویزا","اجازه","تأیید","رسید","اداره"] },
+      { id: "family-docs", title: "مدارک خانوادگی متقاضی", icon: "fa-people-roof", keys: ["family","spouse","child","children","marriage","divorce","birth of child","خانواده","همسر","فرزند","اولاد","ازدواج","طلاق"] },
+      { id: "required-docs", title: "مدارک مورد نیاز متقاضی", icon: "fa-list-check", keys: ["required","missing","need","needed","checklist","مورد نیاز","لازم","کمبود","چک‌لیست","فهرست مدارک"] },
+      { id: "reports", title: "خلاصه و گزارش‌های پرونده", icon: "fa-chart-column", keys: ["summary","report","note","comment","status","progress","case manager","officer","summary","گزارش","خلاصه","یادداشت","توضیحات","وضعیت","پیشرفت","مسئول پرونده","آفیسر"] }
+    ];
+
+    function getCaseFieldCategory(item) {
+      const key = normalizeText(item.key);
+      const value = normalizeText(item.value);
+      const text = key + " " + value;
+      const org = getInternationalOrganizationProfile(text);
+
+      // Organization mentions take precedence for official correspondence/authority material.
+      if (org && (text.includes("letter") || text.includes("correspond") || text.includes("response") || text.includes("document") || text.includes("مکتوب") || text.includes("نامه") || text.includes("مدرک") || text.includes("سازمان"))) {
+        return { category: CASE_FIELD_CATEGORIES[3], organization: org };
+      }
+
+      for (let i = 0; i < CASE_FIELD_CATEGORIES.length; i++) {
+        const category = CASE_FIELD_CATEGORIES[i];
+        if (category.keys.some(function(k) { return text.includes(normalizeText(k)); })) {
+          return { category: category, organization: org };
+        }
+      }
+      return { category: CASE_FIELD_CATEGORIES[8], organization: org };
+    }
+
+    function renderCategorizedCaseFields(fields) {
+      const groups = {};
+      CASE_FIELD_CATEGORIES.forEach(function(category) { groups[category.id] = []; });
+
+      fields.forEach(function(item) {
+        const result = getCaseFieldCategory(item);
+        groups[result.category.id].push({ item: item, organization: result.organization });
+      });
+
+      const ordered = CASE_FIELD_CATEGORIES.filter(function(category) { return groups[category.id].length; });
+      if (!ordered.length) return '<div class="modal-empty"><i class="fa-regular fa-folder-open"></i><p>معلومات دیگری برای نمایش موجود نیست.</p></div>';
+
+      return '<div class="case-category-grid">' + ordered.map(function(category) {
+        const items = groups[category.id];
+        const organizations = [];
+        items.forEach(function(entry) { if (entry.organization && !organizations.some(function(o){return o.domain === entry.organization.domain;})) organizations.push(entry.organization); });
+        const org = organizations[0];
+        const orgLogo = getOfficialOrganizationLogo(org);
+        return '<section class="case-category-card ' + (items.length > 4 ? 'full' : '') + '">' +
+          '<div class="case-category-head">' +
+            '<span class="case-category-icon"><i class="fa-solid ' + category.icon + '"></i></span>' +
+            '<div><h4>' + escapeHtml(category.title) + '</h4><small>' + items.length + ' مورد ثبت‌شده</small></div>' +
+            (orgLogo ? '<img class="organization-logo" src="' + escapeAttribute(orgLogo) + '" alt="' + escapeAttribute(org.name) + '" title="' + escapeAttribute(org.name) + '" onerror="this.style.display=&quot;none&quot;">' : '') +
+          '</div>' +
+          '<div class="case-category-body">' +
+            items.map(function(entry) {
+              const item = entry.item;
+              const url = extractUrl(item.value);
+              const label = getFieldLabel(item.key);
+              return '<div class="category-field">' +
+                '<div class="category-field-label"><strong>' + escapeHtml(label) + '</strong></div>' +
+                '<div class="category-field-value">' + (url ? '<a class="case-button external" href="' + escapeAttribute(url) + '" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> مشاهده / بازکردن سند</a>' : formatValue(item.value)) + '</div>' +
+              '</div>';
+            }).join('') +
+          '</div>' +
+        '</section>';
+      }).join('') + '</div>';
+    }
+
     const COUNTRY_PROFILES = {
       "united states": {
-        officialName: "کشور مشترک‌المنافع استرالیا",
-        agency: "اداره خدمات شهروندی و مهاجرت استرالیا  (USCIS)",
+        officialName: "ایالات متحده آمریکا",
+        agency: "اداره خدمات شهروندی و مهاجرت ایالات متحده (USCIS)",
         domain: "uscis.gov"
       },
       "canada": {
@@ -6528,7 +6870,7 @@
       const applicantPhoto = getApplicantPhoto(caseData);
 
       document.getElementById("modalTitle").textContent =
-        profile.officialName || title;
+        "فرم رسمی معلومات پرونده";
 
       document.getElementById("modalMeta").innerHTML =
         '<span><i class="fa-solid fa-building-columns"></i> ' +
@@ -6572,6 +6914,21 @@
 
       const officialHeader = `
         <section class="official-case-heading">
+          <div class="official-applicant-photo">
+            ${applicantPhoto
+              ? `<img src="${escapeAttribute(applicantPhoto)}"
+                     alt="تصویر متقاضی"
+                     loading="eager"
+                     referrerpolicy="no-referrer"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                 <div class="official-applicant-photo-fallback" style="display:none">
+                   <i class="fa-solid fa-user"></i>
+                 </div>`
+              : `<div class="official-applicant-photo-fallback">
+                   <i class="fa-solid fa-user"></i>
+                 </div>`}
+          </div>
+
           <div class="official-case-logo">
             ${governmentLogo
               ? `<img src="${escapeAttribute(governmentLogo)}"
@@ -6587,8 +6944,11 @@
 
           <div class="official-case-country">
             <div class="official-country-label">کشور مقصد</div>
-            <h2>${escapeHtml(countryName || title)}</h2>
-            <div class="official-country-name">${escapeHtml(profile.officialName)}</div>
+            <h2>${escapeHtml(profile.officialName || countryName || title)}</h2>
+            <div class="official-case-title">
+              <i class="fa-solid fa-folder-open"></i>
+              ${escapeHtml(title)}
+            </div>
             <div class="official-immigration-agency">
               <i class="fa-solid fa-landmark"></i>
               ${escapeHtml(profile.agency)}
@@ -6598,31 +6958,8 @@
           <div class="official-case-number">
             <span>شماره پرونده</span>
             <strong>${escapeHtml(String(caseNumber))}</strong>
-          </div>
-        </section>
-
-        <section class="applicant-document-header">
-          <div class="applicant-document-photo">
-            ${applicantPhoto
-              ? `<img src="${escapeAttribute(applicantPhoto)}"
-                     alt="تصویر متقاضی"
-                     loading="eager"
-                     referrerpolicy="no-referrer"
-                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                 <div class="applicant-document-photo-fallback" style="display:none">
-                   <i class="fa-solid fa-user"></i>
-                 </div>`
-              : `<div class="applicant-document-photo-fallback">
-                   <i class="fa-solid fa-user"></i>
-                 </div>`}
-          </div>
-          <div class="applicant-document-intro">
-            <div class="document-kicker">فرم رسمی معلومات متقاضی</div>
-            <h3>${escapeHtml(title)}</h3>
-            <div class="document-meta">
-              <span><i class="fa-regular fa-calendar"></i> تاریخ درخواست: ${escapeHtml(String(dateApplied))}</span>
-              <span><i class="fa-solid fa-shield-halved"></i> سند پرونده</span>
-            </div>
+            <span style="margin-top:6px; margin-bottom:0;">تاریخ درخواست</span>
+            <strong style="font-size:9px; margin-top:2px;">${escapeHtml(String(dateApplied))}</strong>
           </div>
         </section>
       `;
@@ -6634,27 +6971,8 @@
       } else {
         content.innerHTML =
           officialHeader +
-          '<div class="modal-section-title"><i class="fa-solid fa-table-list"></i> معلومات متقاضی</div>' +
-          '<div class="modal-grid">' +
-          fields.map(function(item) {
-            const url = extractUrl(item.value);
-            const label = getFieldLabel(item.key);
-
-            if (url) {
-              return '<div class="modal-field">' +
-                '<div class="modal-field-label"><strong>' + escapeHtml(label) + '</strong></div>' +
-                '<div class="modal-field-value"><a class="case-button external" href="' +
-                  escapeAttribute(url) + '" target="_blank" rel="noopener noreferrer">' +
-                  '<i class="fa-solid fa-arrow-up-right-from-square"></i> مشاهده / بازکردن سند</a></div>' +
-                '</div>';
-            }
-
-            return '<div class="modal-field">' +
-              '<div class="modal-field-label"><strong>' + escapeHtml(label) + '</strong></div>' +
-              '<div class="modal-field-value">' + formatValue(item.value) + '</div>' +
-              '</div>';
-          }).join("") +
-          '</div>' +
+          '<div class="modal-section-title"><i class="fa-solid fa-table-cells-large"></i> دسته‌بندی معلومات و اسناد پرونده</div>' +
+          renderCategorizedCaseFields(fields) +
           '<div class="case-signature">با احترام<br><strong>VIM</strong><br><span>این سند بر اساس معلومات ثبت‌شده در پرونده تهیه شده است.</span></div>';
       }
 
@@ -6717,7 +7035,7 @@
       ]);
       if (!passport) return;
 
-      if (!silent) showToast("Refreshing...", "success");
+      if (!silent) showToast("در حال به‌روزرسانی پرونده‌ها...", "success");
 
       try {
         const url = API_URL +
@@ -6738,18 +7056,22 @@
           currentCases = nextCases;
           if (newItems.length) {
             addNewNotifications(newItems);
-            showToast("New case information received.", "success");
+            // Automatic/background refresh stays completely silent.
+            // Only a user-triggered refresh may show a success message.
+            if (!silent) {
+              showToast("اطلاعات جدید پرونده دریافت شد.", "success");
+            }
           }
           saveCaseSnapshot(currentCases);
           isInitialCaseLoad = false;
           renderStats();
           renderCases();
           renderNotifications();
-          if (!silent) showToast("Cases updated.", "success");
+          if (!silent) showToast("به‌روزرسانی موفق بود.", "success");
         }
       } catch (error) {
         console.error(error);
-        if (!silent) showToast("Unable to refresh cases.", "error");
+        if (!silent) showToast("به‌روزرسانی انجام نشد. لطفاً دوباره تلاش کنید.", "error");
       }
     }
 
