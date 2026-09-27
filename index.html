@@ -684,37 +684,10 @@
       gap: 8px;
     }
 
+    /* Social icons are rendered from the footer markup and pinned to the mobile header. */
     .mobile-social-actions {
-      display: none;
-      align-items: center;
-      gap: 5px;
-      direction: ltr;
+      display: none !important;
     }
-
-    .mobile-social-btn {
-      width: 35px;
-      height: 35px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      text-decoration: none;
-      color: #fff;
-      border: 1px solid rgba(255,255,255,.22);
-      box-shadow: 0 4px 12px rgba(15,42,68,.12);
-      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
-    }
-
-    .mobile-social-btn:hover,
-    .mobile-social-btn:focus-visible {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-      box-shadow: 0 7px 16px rgba(15,42,68,.18);
-    }
-
-    .mobile-social-btn.facebook { background: #1877f2; }
-    .mobile-social-btn.instagram { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
-    .mobile-social-btn.whatsapp { background: #16a34a; }
 
     .notification-wrap {
       position: relative;
@@ -1996,18 +1969,6 @@
 
     @media (max-width: 700px) {
 
-      .mobile-social-actions {
-        display: flex;
-        flex: 0 0 auto;
-      }
-
-      .mobile-social-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: 9px;
-        font-size: 14px;
-      }
-
       .header-actions {
         gap: 5px;
       }
@@ -2584,96 +2545,132 @@
       box-shadow: 0 7px 20px rgba(15,42,68,.10);
     }
 
+    /* =========================================================
+       MOBILE CONTACT BAR
+       The markup remains in the footer, but on mobile it is pinned
+       to the top/header area. It stays visible while scrolling and
+       is hidden only while a case modal is open.
+       ========================================================= */
+
     .mobile-social-footer {
       display: none;
     }
 
+    .mobile-login-social {
+      display: none;
+    }
+
+    .mobile-social-login-btn {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9px;
+      background: #fff;
+      border: 1px solid rgba(255,255,255,.70);
+      color: var(--primary);
+      font-size: 15px;
+      box-shadow: 0 4px 14px rgba(0,0,0,.16);
+      transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+    }
+
+    .mobile-social-login-btn:hover,
+    .mobile-social-login-btn:focus-visible {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      box-shadow: 0 7px 18px rgba(0,0,0,.20);
+    }
+
+    .mobile-social-login-btn.facebook { color: #285d8f; }
+    .mobile-social-login-btn.instagram { color: #8a3ab9; }
+    .mobile-social-login-btn.whatsapp { color: #1c8b5a; }
+    .mobile-social-login-btn.phone { color: #1f6ea8; }
+
     @media (max-width: 700px) {
-      .case-card {
-        height: 500px !important;
-        min-height: 500px !important;
-        max-height: 500px !important;
-      }
-
-      .case-header {
-        height: 112px;
-        min-height: 112px !important;
-        max-height: 112px;
-      }
-
-      .case-title {
-        font-size: 19px;
-      }
-
-      .country-flag {
-        width: 46px;
-        height: 36px;
-        flex-basis: 46px;
-      }
-
-      .case-body {
-        height: 281px;
-        flex-basis: 281px;
-        min-height: 281px !important;
-        max-height: 281px;
-      }
-
-      .fields-grid {
-        max-height: 218px;
-      }
-
-      .applicant-photo {
-        width: 56px;
-        height: 72px;
-        flex-basis: 56px;
-      }
-
-      .dashboard-footer .footer-inner > :not(.mobile-social-footer) {
-        display: none !important;
-      }
-
-      .dashboard-footer {
-        padding: 4px 12px 18px;
-      }
-
-      .footer-inner {
+      .mobile-login-social {
+        position: fixed;
+        top: 7px;
+        right: 10px;
+        z-index: 12000;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 100%;
-        padding-top: 10px;
+        gap: 5px;
+        direction: ltr;
+      }
+
+      #loginPage {
+        padding-top: 74px;
+        padding-bottom: 24px;
+      }
+
+      .dashboard-footer {
+        display: none !important;
       }
 
       .mobile-social-footer {
+        position: fixed;
+        top: 7px;
+        right: 10px;
+        z-index: 12000;
         display: flex !important;
         align-items: center;
         justify-content: center;
-        gap: 18px;
-        width: 100%;
+        gap: 5px;
+        direction: ltr;
+        width: auto;
+        padding: 0;
       }
 
       .mobile-social-footer a {
-        width: 38px;
-        height: 38px;
+        width: 34px;
+        height: 34px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border-radius: 50%;
+        border-radius: 9px;
         background: #fff;
-        border: 1px solid var(--border);
+        border: 1px solid rgba(255,255,255,.70);
         color: var(--primary);
-        font-size: 18px;
-        box-shadow: 0 5px 16px rgba(20,40,60,.08);
+        font-size: 15px;
+        box-shadow: 0 4px 14px rgba(20,40,60,.16);
+        transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
       }
 
-      .mobile-social-footer a:hover {
+      .mobile-social-footer a:hover,
+      .mobile-social-footer a:focus-visible {
         transform: translateY(-1px);
+        filter: brightness(1.04);
+        box-shadow: 0 7px 18px rgba(20,40,60,.20);
       }
 
       .mobile-social-footer a.whatsapp { color: #1c8b5a; }
       .mobile-social-footer a.instagram { color: #8a3ab9; }
       .mobile-social-footer a.phone { color: #1f6ea8; }
       .mobile-social-footer a.facebook { color: #285d8f; }
+
+      /* Never hide the contact bar during page scrolling. */
+      .mobile-social-footer,
+      .mobile-social-footer * {
+        visibility: visible;
+      }
+
+      /* The contact icons disappear only while a case is open. */
+      body.case-open .mobile-social-footer {
+        display: none !important;
+      }
+
+      /* Mobile login: same VIM app-like contact header. */
+      #loginPage .mobile-login-social {
+        display: flex;
+      }
+    }
+
+    @media (min-width: 701px) {
+      .mobile-login-social {
+        display: none !important;
+      }
     }
 
     @media (max-width: 380px) {
@@ -3597,6 +3594,21 @@
 
   <section id="loginPage">
 
+    <div class="mobile-login-social" aria-label="شبکه‌های ارتباطی VIM">
+      <a class="mobile-social-login-btn facebook" href="https://www.facebook.com/visa.immigration.vim" target="_blank" rel="noopener noreferrer" aria-label="Facebook VIM" title="Facebook VIM">
+        <i class="fa-brands fa-facebook-f"></i>
+      </a>
+      <a class="mobile-social-login-btn instagram" href="https://www.instagram.com/visa.immigration.vim?utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram VIM" title="Instagram VIM">
+        <i class="fa-brands fa-instagram"></i>
+      </a>
+      <a class="mobile-social-login-btn whatsapp" href="https://wa.me/93780412583" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp VIM" title="WhatsApp VIM">
+        <i class="fa-brands fa-whatsapp"></i>
+      </a>
+      <a class="mobile-social-login-btn phone" href="tel:+93780412583" aria-label="Call VIM" title="Call VIM">
+        <i class="fa-solid fa-phone"></i>
+      </a>
+    </div>
+
     <div class="login-card">
 
       <div class="login-visual-strip" aria-hidden="true">
@@ -3744,18 +3756,6 @@
 
 
         <div class="header-actions">
-
-          <div class="mobile-social-actions" aria-label="شبکه‌های ارتباطی VIM">
-            <a class="mobile-social-btn facebook" href="https://www.facebook.com/visa.immigration.vim" target="_blank" rel="noopener noreferrer" aria-label="Facebook VIM" title="Facebook VIM">
-              <i class="fa-brands fa-facebook-f"></i>
-            </a>
-            <a class="mobile-social-btn instagram" href="https://www.instagram.com/visa.immigration.vim?utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram VIM" title="Instagram VIM">
-              <i class="fa-brands fa-instagram"></i>
-            </a>
-            <a class="mobile-social-btn whatsapp" href="https://wa.me/93780412581" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp VIM" title="WhatsApp VIM">
-              <i class="fa-brands fa-whatsapp"></i>
-            </a>
-          </div>
 
           <div class="notification-wrap">
             <button
@@ -3967,40 +3967,22 @@
     <!-- Footer -->
 
     <footer class="dashboard-footer">
-
       <div class="footer-inner">
-
-        <div>
-          VIM Humanitarian Case Management
-        </div>
-
-        <a
-          class="whatsapp-link"
-          href="https://wa.me/93780412583"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <i class="fa-brands fa-whatsapp"></i>
-          +93780412583
-        </a>
-
         <div class="mobile-social-footer" aria-label="Contact links">
-          <a class="whatsapp" href="https://wa.me/93780412583" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-            <i class="fa-brands fa-whatsapp"></i>
-          </a>
-          <a class="instagram" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <i class="fa-brands fa-instagram"></i>
-          </a>
-          <a class="phone" href="tel:+93780412583" aria-label="Phone">
-            <i class="fa-solid fa-phone"></i>
-          </a>
-          <a class="facebook" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <a class="facebook" href="https://www.facebook.com/visa.immigration.vim" target="_blank" rel="noopener noreferrer" aria-label="Facebook VIM" title="Facebook VIM">
             <i class="fa-brands fa-facebook-f"></i>
           </a>
+          <a class="instagram" href="https://www.instagram.com/visa.immigration.vim?utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram VIM" title="Instagram VIM">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a class="whatsapp" href="https://wa.me/93780412583" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp VIM" title="WhatsApp VIM">
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
+          <a class="phone" href="tel:+93780412583" aria-label="Call VIM" title="Call VIM">
+            <i class="fa-solid fa-phone"></i>
+          </a>
         </div>
-
       </div>
-
     </footer>
 
   </section>
@@ -6832,6 +6814,7 @@
       `;
 
       document.getElementById("caseModal").classList.add("show");
+      document.body.classList.add("case-open");
       document.body.style.overflow = "hidden";
 
       // Mark only these exact updates as seen after they have been displayed.
@@ -6977,6 +6960,7 @@
       }
 
       document.getElementById("caseModal").classList.add("show");
+      document.body.classList.add("case-open");
       document.body.style.overflow = "hidden";
     }
 
@@ -6986,6 +6970,7 @@
         .getElementById("caseModal")
         .classList.remove("show");
 
+      document.body.classList.remove("case-open");
 
       document.body.style.overflow =
         "";
